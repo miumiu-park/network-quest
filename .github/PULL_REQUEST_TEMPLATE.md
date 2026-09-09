@@ -1,13 +1,13 @@
-## Summary
+## 概要
 
-## Linked Issue
+## 関連Issue
 
 Closes #
 
-## Verification
+## 確認項目
 
-- [ ] Lint passes
-- [ ] Tests pass
-- [ ] Build passes
-- [ ] No real shell or network execution is introduced
-- [ ] Documentation is updated if needed
+- [ ] Lintが成功する
+- [ ] Testが成功する
+- [ ] Buildが成功する
+- [ ] 実Shellや実ネットワークを実行する処理を導入していない
+- [ ] 必要に応じて文書を更新した

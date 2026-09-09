@@ -1,14 +1,14 @@
 # Network Quest
 
-Network Quest is a network troubleshooting RPG for learning practical networking skills through gameplay.
+Network Questは、ゲームを通して実践的なネットワークスキルを学ぶ、ネットワークトラブルシューティングRPGです。
 
-## MVP
+## MVPの目的
 
-Explore LAN Village, encounter an enemy, investigate a simulated network through a safe pseudo-terminal, identify and repair the fault, verify recovery, earn EXP, and review what you learned.
+LAN Villageを探索し、敵と遭遇し、安全な疑似Terminalで仮想ネットワークを調査します。原因の特定、設定の修復、復旧確認を経て敵を撃破し、EXPを獲得して学習内容を振り返るまでを、MVPのコア体験とします。
 
-The MVP has no backend or database. Terminal commands operate only on scenario-defined virtual network state; they never invoke an OS shell or access a real network.
+MVPにはBackendやDatabaseを設けません。Terminal commandはScenarioで定義された仮想Network Stateだけを操作し、OS Shellの実行や実ネットワークへの接続は行いません。
 
-## Architecture
+## アーキテクチャ
 
 ```text
 UI
@@ -18,11 +18,11 @@ UI
         -> Scenario Data
 ```
 
-Game flow, scenario engine, terminal parser/executor, network simulator, investigation history, battle/scoring, progression, learning review, and storage are separate responsibilities. Domain logic must not be embedded in React components.
+Game Flow、Scenario Engine、Terminal Parser/Executor、Network Simulator、Investigation History、Battle/Scoring、Progression、Learning Review、Storageの責務を分離します。React Componentへドメインロジックを直接記述しません。
 
-See [docs/architecture.md](docs/architecture.md) and [docs/security.md](docs/security.md).
+[アーキテクチャ詳細](docs/architecture.md)と[セキュリティ方針](docs/security.md)も参照してください。
 
-## Technology stack
+## 技術スタック
 
 - React, TypeScript, Vite
 - Zustand, React Router
@@ -34,9 +34,9 @@ See [docs/architecture.md](docs/architecture.md) and [docs/security.md](docs/sec
 
 Phaser, backend APIs, databases, authentication, multiplayer, and real network access are outside the MVP.
 
-## Setup, development, and testing
+## Setup・開発・テスト
 
-Project scaffolding is intentionally tracked in Issue #1. Once it is complete:
+プロジェクト初期化はIssue #1で実施します。完了後は以下のcommandを利用します。
 
 ```sh
 npm ci
@@ -46,20 +46,20 @@ npm test
 npm run build
 ```
 
-## Adding a scenario
+## Scenarioの追加
 
-1. Add JSON under `scenarios/chapter-01/` or `scenarios/bosses/`.
-2. Conform to the Scenario schema.
-3. Load through the Scenario Loader and validate with Zod before use.
-4. Add simulator and gameplay tests without real network calls.
+1. `scenarios/chapter-01/`または`scenarios/bosses/`へJSONを追加します。
+2. Scenario Schemaへ準拠させます。
+3. Scenario Loaderを通し、利用前にZodで検証します。
+4. 実ネットワークへ接続しないSimulator・gameplay testを追加します。
 
-## Branch and pull request workflow
+## Branch / Pull Request運用
 
-- Start each change from one focused Issue.
-- Create a branch from `main`, for example `feature/issue-12-terminal-ui`.
-- Never work directly on `main`.
-- Open a pull request and wait for CI.
-- Resolve every review conversation and obtain at least one approval.
-- Squash merge after checks and review succeed.
+- 1つの明確な目的を持つIssueから作業を開始します。
+- `main`から、例として`feature/issue-12-terminal-ui`のようなbranchを作成します。
+- `main`上で直接作業しません。
+- Pull Requestを作成してCIの完了を待ちます。
+- すべてのreview conversationを解決し、1名以上のApproveを得ます。
+- CIとreviewの成功後にSquash Mergeします。
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+詳細は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
