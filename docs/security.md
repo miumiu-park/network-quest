@@ -1,6 +1,6 @@
-# Security model
+# セキュリティモデル
 
-The pseudo-terminal is a game interface, not a system terminal.
+疑似Terminalはgame interfaceであり、system terminalではありません。
 
 ```text
 User Input
@@ -9,6 +9,6 @@ User Input
       -> Network Simulator
 ```
 
-All results are derived from validated scenario state. The terminal must never call an OS shell, `eval`, `new Function`, `child_process`, real ping, real DNS, or arbitrary external URLs. Unknown commands and invalid arguments return controlled game errors.
+すべての結果は検証済みScenario Stateから生成します。TerminalはOS Shell、`eval`、`new Function`、`child_process`、実ping、実DNS、任意の外部URLを決して呼び出しません。未知のcommandや不正なargumentには、制御されたgame errorを返します。
 
-Scenario JSON is untrusted input and must pass a Zod schema before entering the game engine. GitHub Actions use read-only repository permissions unless a narrowly scoped deployment job explicitly requires more.
+Scenario JSONは信頼できないinputとして扱い、Game Engineへ渡す前にZod Schemaを通過させます。GitHub Actionsは、限定されたdeploy jobで明示的に必要な場合を除き、repositoryへのread-only permissionsを使用します。
