@@ -37,7 +37,7 @@ Phaserは使用せず、大規模UI libraryも導入しません。
 
 ## Setup・開発・テスト
 
-プロジェクト初期化はIssue #1で実施します。完了後は以下のcommandを利用します。
+依存関係をinstallした後、以下のcommandを利用できます。
 
 ```sh
 npm ci
