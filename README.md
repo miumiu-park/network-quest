@@ -26,13 +26,14 @@ Game Flow、Scenario Engine、Terminal Parser/Executor、Network Simulator、Inv
 
 - React, TypeScript, Vite
 - Zustand, React Router
-- JSON scenarios validated with Zod
+- JSON形式のScenarioとZodによるvalidation
 - CSS Modules
 - Vitest, React Testing Library, Playwright
 - ESLint, Prettier, GitHub Actions
-- LocalStorage behind a repository interface
+- Repository interfaceを経由したLocalStorage
+- Backend API、Database、Authentication、Multiplayer、実ネットワーク通信はMVP対象外
 
-Phaser, backend APIs, databases, authentication, multiplayer, and real network access are outside the MVP.
+Phaserは使用せず、大規模UI libraryも導入しません。
 
 ## Setup・開発・テスト
 
