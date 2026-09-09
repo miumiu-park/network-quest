@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate initial repository structure
+      - name: 初期リポジトリ構成を検証
         if: ${{ hashFiles('package-lock.json') == '' }}
         run: test -f README.md && test -f AGENTS.md && test -f docs/architecture.md
       - uses: actions/setup-node@v4
@@ -22,15 +22,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install dependencies
+      - name: 依存関係をinstall
         if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm ci
-      - name: Lint
+      - name: Lintを実行
         if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm run lint
-      - name: Test
+      - name: Testを実行
         if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm test -- --run
-      - name: Build
+      - name: Buildを実行
         if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm run build
