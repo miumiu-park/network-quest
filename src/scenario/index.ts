@@ -1,4 +1,6 @@
 export { scenarioSchema } from './scenarioSchema'
+export { loadScenario } from './loadScenario'
+export type { ScenarioLoadError, ScenarioLoadResult } from './loadScenario'
 export type {
   JsonValue,
   Scenario,
