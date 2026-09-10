@@ -32,9 +32,9 @@ function BattleRoute() {
   )
 }
 
-const unavailableExecutor: TerminalExecutor = (command) => ({
+const unavailableExecutor: TerminalExecutor = ({ command, args }) => ({
   kind: 'error',
-  text: `「${command}」はまだ利用できません。`,
+  text: `「${[command, ...args].join(' ')}」はまだ利用できません。`,
 })
 
 export function AppRoutes() {
