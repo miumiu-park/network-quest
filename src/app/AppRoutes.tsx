@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
-import { Terminal, type TerminalExecutor } from '../terminal'
+import { createCommandExecutor, Terminal } from '../terminal'
 import { APP_ROUTES } from './routes'
 
 interface ScreenProps {
@@ -32,10 +32,7 @@ function BattleRoute() {
   )
 }
 
-const unavailableExecutor: TerminalExecutor = ({ command, args }) => ({
-  kind: 'error',
-  text: `「${[command, ...args].join(' ')}」はまだ利用できません。`,
-})
+const unavailableExecutor = createCommandExecutor({})
 
 export function AppRoutes() {
   return (
