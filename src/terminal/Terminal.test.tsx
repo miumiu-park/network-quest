@@ -18,7 +18,10 @@ describe('Terminal', () => {
     )
     await user.click(screen.getByRole('button', { name: '実行' }))
 
-    expect(execute).toHaveBeenCalledWith('ping gateway')
+    expect(execute).toHaveBeenCalledWith({
+      command: 'ping',
+      args: ['gateway'],
+    })
     expect(screen.getByText('ping gateway')).toBeInTheDocument()
     expect(screen.getByText('gateway is reachable')).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'コマンド' })).toHaveValue('')
@@ -51,6 +54,23 @@ describe('Terminal', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent(
       'コマンドを入力してください。',
+    )
+    expect(execute).not.toHaveBeenCalled()
+  })
+
+  it('does not pass invalid syntax to the executor', async () => {
+    const user = userEvent.setup()
+    const execute = vi.fn<TerminalExecutor>()
+    render(<Terminal execute={execute} />)
+
+    await user.type(
+      screen.getByRole('textbox', { name: 'コマンド' }),
+      'ping gateway;reboot',
+    )
+    await user.click(screen.getByRole('button', { name: '実行' }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      '引数「gateway;reboot」の形式が正しくありません。',
     )
     expect(execute).not.toHaveBeenCalled()
   })

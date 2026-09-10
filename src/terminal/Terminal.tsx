@@ -1,11 +1,12 @@
 import { useId, useState, type FormEvent } from 'react'
+import { parseCommand, type ParsedCommand } from './commandParser'
 import styles from './Terminal.module.css'
 
 export type TerminalResult =
   | { readonly kind: 'output'; readonly text: string }
   | { readonly kind: 'error'; readonly text: string }
 
-export type TerminalExecutor = (command: string) => TerminalResult
+export type TerminalExecutor = (command: ParsedCommand) => TerminalResult
 
 interface TerminalEntry {
   readonly id: number
@@ -26,14 +27,18 @@ export function Terminal({ execute }: TerminalProps) {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const normalizedCommand = command.trim()
-    if (normalizedCommand.length === 0) {
-      setValidationError('コマンドを入力してください。')
+    const parseResult = parseCommand(command)
+    if (!parseResult.ok) {
+      setValidationError(parseResult.error.message)
       return
     }
 
     setValidationError(null)
-    const result = execute(normalizedCommand)
+    const result = execute(parseResult.value)
+    const normalizedCommand = [
+      parseResult.value.command,
+      ...parseResult.value.args,
+    ].join(' ')
     setEntries((currentEntries) => [
       ...currentEntries,
       { id: currentEntries.length + 1, command: normalizedCommand, result },
