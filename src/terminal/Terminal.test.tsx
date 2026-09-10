@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Terminal, type TerminalExecutor } from './Terminal'
+import { Terminal } from './Terminal'
+import type { TerminalExecutor } from './terminalTypes'
 
 describe('Terminal', () => {
   it('executes a normalized command and displays its output in history', async () => {

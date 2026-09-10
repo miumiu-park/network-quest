@@ -1,12 +1,7 @@
 import { useId, useState, type FormEvent } from 'react'
-import { parseCommand, type ParsedCommand } from './commandParser'
+import { parseCommand } from './commandParser'
 import styles from './Terminal.module.css'
-
-export type TerminalResult =
-  | { readonly kind: 'output'; readonly text: string }
-  | { readonly kind: 'error'; readonly text: string }
-
-export type TerminalExecutor = (command: ParsedCommand) => TerminalResult
+import type { TerminalExecutor, TerminalResult } from './terminalTypes'
 
 interface TerminalEntry {
   readonly id: number
