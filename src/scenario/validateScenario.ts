@@ -1,4 +1,5 @@
-import { scenarioSchema, type Scenario } from './scenarioSchema'
+import type { Scenario } from './scenario'
+import { scenarioSchema } from './scenarioSchema'
 
 export interface ScenarioValidationIssue {
   readonly code: string

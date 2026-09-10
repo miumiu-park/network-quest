@@ -1,3 +1,5 @@
+import type { ScenarioId } from '../scenario/scenario'
+
 export const GAME_SCREENS = [
   'MAP',
   'EVENT',
@@ -8,7 +10,7 @@ export const GAME_SCREENS = [
 
 export type GameScreen = (typeof GAME_SCREENS)[number]
 
-export type ScenarioId = string
+export type { ScenarioId } from '../scenario/scenario'
 
 export interface PlayerState {
   readonly level: number
