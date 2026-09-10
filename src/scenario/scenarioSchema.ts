@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import type { Scenario } from './scenario'
 
 const nonEmptyString = z.string().trim().min(1)
 
-export const scenarioSchema = z.strictObject({
+export const scenarioSchema: z.ZodType<Scenario> = z.strictObject({
   id: nonEmptyString.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: nonEmptyString,
   enemy: z.strictObject({
@@ -30,5 +31,3 @@ export const scenarioSchema = z.strictObject({
     keyPoints: z.array(nonEmptyString).min(1),
   }),
 })
-
-export type Scenario = z.infer<typeof scenarioSchema>
