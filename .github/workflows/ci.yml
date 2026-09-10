@@ -2,38 +2,35 @@ name: CI
 
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     name: quality
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: 初期リポジトリ構成を検証
-        if: ${{ hashFiles('package-lock.json') == '' }}
-        run: test -f README.md && test -f AGENTS.md && test -f docs/architecture.md
       - uses: actions/setup-node@v4
-        if: ${{ hashFiles('package-lock.json') != '' }}
         with:
           node-version: 22
           cache: npm
       - name: 依存関係をinstall
-        if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm ci
       - name: Lintを実行
-        if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm run lint
       - name: Formatを検証
-        if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm run format:check
       - name: Testを実行
-        if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm test -- --run
       - name: Buildを実行
-        if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm run build
