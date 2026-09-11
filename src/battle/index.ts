@@ -1,5 +1,6 @@
 export { CAUSE_ANSWER_OPTIONS, createBattleEngine } from './battleEngine'
 export { applyInvestigationObservations } from './investigationDamage'
+export { recordDnsRepair, verifyDnsRepair } from './repairVerification'
 export type {
   BattleEngine,
   BattleEngineConfig,
@@ -10,5 +11,8 @@ export type {
   CauseAnswerResult,
   DiagnosisStatus,
   InvestigationEffectiveness,
+  RepairStatus,
+  RepairVerificationStatus,
 } from './battleEngine'
 export type { ObservationEffectivenessEvaluator } from './investigationDamage'
+export type { DnsRepairVerificationResult } from './repairVerification'
