@@ -13,6 +13,10 @@ export type CauseAnswer = (typeof CAUSE_ANSWER_OPTIONS)[number]
 
 export type DiagnosisStatus = 'UNANSWERED' | 'INCORRECT' | 'CORRECT'
 
+export type RepairStatus = 'NOT_REPAIRED' | 'REPAIRED'
+
+export type RepairVerificationStatus = 'NOT_VERIFIED' | 'FAILED' | 'SUCCEEDED'
+
 export interface BattleEngineConfig {
   readonly enemyMaxHp: number
   readonly effectiveInvestigationDamage: number
@@ -38,6 +42,8 @@ export interface BattleEngineState {
   readonly lastInvestigation: BattleInvestigationResult | null
   readonly causeAnswerAttempts: readonly CauseAnswerResult[]
   readonly diagnosisStatus: DiagnosisStatus
+  readonly repairStatus: RepairStatus
+  readonly repairVerificationStatus: RepairVerificationStatus
   readonly status: BattleEngineStatus
 }
 
@@ -50,6 +56,11 @@ export interface BattleEngine {
   readonly submitCauseAnswer: (
     state: BattleEngineState,
     answer: CauseAnswer,
+  ) => BattleEngineState
+  readonly recordRepair: (state: BattleEngineState) => BattleEngineState
+  readonly verifyRepair: (
+    state: BattleEngineState,
+    successful: boolean,
   ) => BattleEngineState
 }
 
@@ -73,6 +84,8 @@ export function createBattleEngine(config: BattleEngineConfig): BattleEngine {
         lastInvestigation: null,
         causeAnswerAttempts: [],
         diagnosisStatus: 'UNANSWERED',
+        repairStatus: 'NOT_REPAIRED',
+        repairVerificationStatus: 'NOT_VERIFIED',
         status: 'IN_PROGRESS',
       })
     },
@@ -99,7 +112,7 @@ export function createBattleEngine(config: BattleEngineConfig): BattleEngine {
           (effectiveness === 'EFFECTIVE' ? 1 : 0),
         totalDamage: state.totalDamage + damage,
         lastInvestigation: { effectiveness, damage },
-        status: enemyHp === 0 ? 'CLEARED' : 'IN_PROGRESS',
+        status: 'IN_PROGRESS',
       })
     },
     submitCauseAnswer(state: BattleEngineState, answer: CauseAnswer) {
@@ -116,6 +129,37 @@ export function createBattleEngine(config: BattleEngineConfig): BattleEngine {
         ...state,
         causeAnswerAttempts: [...state.causeAnswerAttempts, result],
         diagnosisStatus: result.correct ? 'CORRECT' : 'INCORRECT',
+      })
+    },
+    recordRepair(state: BattleEngineState) {
+      if (state.status === 'CLEARED' || state.repairStatus === 'REPAIRED') {
+        return state
+      }
+
+      return freezeState({
+        ...state,
+        repairStatus: 'REPAIRED',
+        repairVerificationStatus: 'NOT_VERIFIED',
+      })
+    },
+    verifyRepair(state: BattleEngineState, successful: boolean) {
+      if (state.status === 'CLEARED' || state.repairStatus !== 'REPAIRED') {
+        return state
+      }
+
+      if (!successful) {
+        return freezeState({
+          ...state,
+          repairVerificationStatus: 'FAILED',
+        })
+      }
+
+      return freezeState({
+        ...state,
+        enemyHp: 0,
+        totalDamage: state.totalDamage + state.enemyHp,
+        repairVerificationStatus: 'SUCCEEDED',
+        status: 'CLEARED',
       })
     },
   })

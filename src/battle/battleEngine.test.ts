@@ -20,6 +20,8 @@ describe('createBattleEngine', () => {
       lastInvestigation: null,
       causeAnswerAttempts: [],
       diagnosisStatus: 'UNANSWERED',
+      repairStatus: 'NOT_REPAIRED',
+      repairVerificationStatus: 'NOT_VERIFIED',
       status: 'IN_PROGRESS',
     })
     expect(Object.isFrozen(state)).toBe(true)
@@ -55,7 +57,7 @@ describe('createBattleEngine', () => {
     })
   })
 
-  it('clamps damage to remaining HP and clears the battle', () => {
+  it('clamps damage to remaining HP without clearing before verification', () => {
     const finishingEngine = createBattleEngine({
       enemyMaxHp: 20,
       effectiveInvestigationDamage: 30,
@@ -70,7 +72,7 @@ describe('createBattleEngine', () => {
       enemyHp: 0,
       totalDamage: 20,
       lastInvestigation: { effectiveness: 'EFFECTIVE', damage: 20 },
-      status: 'CLEARED',
+      status: 'IN_PROGRESS',
     })
   })
 
@@ -96,10 +98,12 @@ describe('createBattleEngine', () => {
       effectiveInvestigationDamage: 10,
       correctCause: 'DNS',
     })
-    const clearedState = finishingEngine.investigate(
+    const depletedState = finishingEngine.investigate(
       finishingEngine.createInitialState(),
       'EFFECTIVE',
     )
+    const repairedState = finishingEngine.recordRepair(depletedState)
+    const clearedState = finishingEngine.verifyRepair(repairedState, true)
 
     expect(finishingEngine.investigate(clearedState, 'EFFECTIVE')).toBe(
       clearedState,
