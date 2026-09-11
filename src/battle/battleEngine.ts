@@ -2,14 +2,31 @@ export type BattleEngineStatus = 'IN_PROGRESS' | 'CLEARED'
 
 export type InvestigationEffectiveness = 'EFFECTIVE' | 'INEFFECTIVE'
 
+export const CAUSE_ANSWER_OPTIONS = [
+  'IP_ADDRESS',
+  'GATEWAY',
+  'DNS',
+  'FIREWALL',
+] as const
+
+export type CauseAnswer = (typeof CAUSE_ANSWER_OPTIONS)[number]
+
+export type DiagnosisStatus = 'UNANSWERED' | 'INCORRECT' | 'CORRECT'
+
 export interface BattleEngineConfig {
   readonly enemyMaxHp: number
   readonly effectiveInvestigationDamage: number
+  readonly correctCause: CauseAnswer
 }
 
 export interface BattleInvestigationResult {
   readonly effectiveness: InvestigationEffectiveness
   readonly damage: number
+}
+
+export interface CauseAnswerResult {
+  readonly answer: CauseAnswer
+  readonly correct: boolean
 }
 
 export interface BattleEngineState {
@@ -19,6 +36,8 @@ export interface BattleEngineState {
   readonly effectiveInvestigationCount: number
   readonly totalDamage: number
   readonly lastInvestigation: BattleInvestigationResult | null
+  readonly causeAnswerAttempts: readonly CauseAnswerResult[]
+  readonly diagnosisStatus: DiagnosisStatus
   readonly status: BattleEngineStatus
 }
 
@@ -27,6 +46,10 @@ export interface BattleEngine {
   readonly investigate: (
     state: BattleEngineState,
     effectiveness: InvestigationEffectiveness,
+  ) => BattleEngineState
+  readonly submitCauseAnswer: (
+    state: BattleEngineState,
+    answer: CauseAnswer,
   ) => BattleEngineState
 }
 
@@ -48,6 +71,8 @@ export function createBattleEngine(config: BattleEngineConfig): BattleEngine {
         effectiveInvestigationCount: 0,
         totalDamage: 0,
         lastInvestigation: null,
+        causeAnswerAttempts: [],
+        diagnosisStatus: 'UNANSWERED',
         status: 'IN_PROGRESS',
       })
     },
@@ -77,6 +102,22 @@ export function createBattleEngine(config: BattleEngineConfig): BattleEngine {
         status: enemyHp === 0 ? 'CLEARED' : 'IN_PROGRESS',
       })
     },
+    submitCauseAnswer(state: BattleEngineState, answer: CauseAnswer) {
+      if (state.status === 'CLEARED' || state.diagnosisStatus === 'CORRECT') {
+        return state
+      }
+
+      const result = Object.freeze({
+        answer,
+        correct: answer === frozenConfig.correctCause,
+      })
+
+      return freezeState({
+        ...state,
+        causeAnswerAttempts: [...state.causeAnswerAttempts, result],
+        diagnosisStatus: result.correct ? 'CORRECT' : 'INCORRECT',
+      })
+    },
   })
 }
 
@@ -93,5 +134,8 @@ function freezeState(state: BattleEngineState): BattleEngineState {
       state.lastInvestigation === null
         ? null
         : Object.freeze({ ...state.lastInvestigation }),
+    causeAnswerAttempts: Object.freeze(
+      state.causeAnswerAttempts.map((attempt) => Object.freeze({ ...attempt })),
+    ),
   })
 }

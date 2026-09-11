@@ -5,6 +5,7 @@ describe('createBattleEngine', () => {
   const engine = createBattleEngine({
     enemyMaxHp: 100,
     effectiveInvestigationDamage: 30,
+    correctCause: 'DNS',
   })
 
   it('creates an immutable battle state with full enemy HP', () => {
@@ -17,6 +18,8 @@ describe('createBattleEngine', () => {
       effectiveInvestigationCount: 0,
       totalDamage: 0,
       lastInvestigation: null,
+      causeAnswerAttempts: [],
+      diagnosisStatus: 'UNANSWERED',
       status: 'IN_PROGRESS',
     })
     expect(Object.isFrozen(state)).toBe(true)
@@ -56,6 +59,7 @@ describe('createBattleEngine', () => {
     const finishingEngine = createBattleEngine({
       enemyMaxHp: 20,
       effectiveInvestigationDamage: 30,
+      correctCause: 'DNS',
     })
     const state = finishingEngine.investigate(
       finishingEngine.createInitialState(),
@@ -90,6 +94,7 @@ describe('createBattleEngine', () => {
     const finishingEngine = createBattleEngine({
       enemyMaxHp: 10,
       effectiveInvestigationDamage: 10,
+      correctCause: 'DNS',
     })
     const clearedState = finishingEngine.investigate(
       finishingEngine.createInitialState(),
@@ -102,9 +107,20 @@ describe('createBattleEngine', () => {
   })
 
   it.each([
-    [{ enemyMaxHp: 0, effectiveInvestigationDamage: 10 }, 'enemyMaxHp'],
     [
-      { enemyMaxHp: 10, effectiveInvestigationDamage: 1.5 },
+      {
+        enemyMaxHp: 0,
+        effectiveInvestigationDamage: 10,
+        correctCause: 'DNS',
+      },
+      'enemyMaxHp',
+    ],
+    [
+      {
+        enemyMaxHp: 10,
+        effectiveInvestigationDamage: 1.5,
+        correctCause: 'DNS',
+      },
       'effectiveInvestigationDamage',
     ],
   ] as const)('rejects invalid config %o', (config, invalidField) => {
