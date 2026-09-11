@@ -1,6 +1,7 @@
 export { createNetworkState } from './createNetworkState'
 export { createNetworkSimulator } from './networkSimulator'
-export { networkStateSchema } from './networkStateSchema'
+export { simulatePing } from './ipReachability'
+export { isIpv4Address, networkStateSchema } from './networkStateSchema'
 export type {
   NetworkStateCreationResult,
   NetworkStateValidationError,
