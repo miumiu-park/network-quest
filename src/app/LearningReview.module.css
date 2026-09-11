@@ -1,0 +1,97 @@
+.screen {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px;
+  text-align: left;
+}
+
+.heading {
+  width: min(760px, 100%);
+  text-align: center;
+}
+
+.heading h1 {
+  margin: 8px 0 12px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(900px, 100%);
+}
+
+.card,
+.steps {
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--social-bg);
+  padding: 20px;
+}
+
+.card h2,
+.steps h2 {
+  color: var(--text-h);
+}
+
+.causeType {
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.steps {
+  width: min(900px, 100%);
+}
+
+.steps ol {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding-left: 28px;
+}
+
+.steps li {
+  padding-left: 4px;
+}
+
+.steps li span {
+  display: block;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.returnLink {
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .screen {
+    padding: 24px 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

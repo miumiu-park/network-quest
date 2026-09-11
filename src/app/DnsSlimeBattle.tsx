@@ -12,6 +12,7 @@ import {
   createInvestigationHistory,
   type InvestigationObservation,
 } from '../investigation'
+import { createLearningReview } from '../learning'
 import {
   createNetworkSimulator,
   createNetworkState,
@@ -167,6 +168,17 @@ export function DnsSlimeBattle() {
     )
   }
 
+  function showResult() {
+    navigate(APP_ROUTES.result, {
+      state: {
+        learningReview: createLearningReview(
+          DNS_SLIME_SCENARIO,
+          history.getEntries(),
+        ),
+      },
+    })
+  }
+
   return (
     <main id="center" className={styles.screen}>
       <header className={styles.heading}>
@@ -225,7 +237,7 @@ export function DnsSlimeBattle() {
         <section className={styles.clear} aria-label="Stage Clear">
           <h2>DNS Slime 撃破！</h2>
           <p>Stage Clear</p>
-          <button type="button" onClick={() => navigate(APP_ROUTES.result)}>
+          <button type="button" onClick={showResult}>
             Resultへ
           </button>
         </section>

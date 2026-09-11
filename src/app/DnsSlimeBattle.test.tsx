@@ -42,10 +42,35 @@ describe('DNS Slime playable scenario', () => {
 
     await user.click(screen.getByRole('link', { name: '学習レビューへ' }))
     expect(
-      screen.getByRole('heading', { name: 'Learning' }),
+      screen.getByRole('heading', { name: 'Learning Review' }),
     ).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: '症状' })).toHaveTextContent(
+      'DNS Slimeの名前解決障害',
+    )
+    expect(screen.getByRole('region', { name: '原因' })).toHaveTextContent(
+      'DNS',
+    )
     expect(
-      screen.getByText(/IP到達性と名前解決を順番に確認/),
-    ).toBeInTheDocument()
+      screen.getByRole('region', { name: '使用command' }),
+    ).toHaveTextContent('pingnslookup')
+    const playerSteps = screen.getByRole('region', {
+      name: 'あなたの調査手順',
+    })
+    expect(
+      [...playerSteps.querySelectorAll('code')].map(
+        (command) => command.textContent,
+      ),
+    ).toEqual([
+      'ping gateway',
+      'ping 203.0.113.20',
+      'nslookup quest.example',
+      'nslookup quest.example',
+    ])
+    expect(screen.getByRole('region', { name: '推奨手順' })).toHaveTextContent(
+      'gatewayへのping',
+    )
+    expect(
+      screen.getByRole('region', { name: '原因を特定できた理由' }),
+    ).toHaveTextContent(/IP到達性と名前解決を順番に確認/)
   })
 })
