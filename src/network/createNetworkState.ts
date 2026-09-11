@@ -42,7 +42,7 @@ export function createNetworkState(
   }
 }
 
-function freezeNetworkState(state: NetworkState): NetworkState {
+export function freezeNetworkState(state: NetworkState): NetworkState {
   return Object.freeze({
     client: Object.freeze({
       ...state.client,
