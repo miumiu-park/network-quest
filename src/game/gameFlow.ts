@@ -1,9 +1,11 @@
+import { addExperience } from '../progression'
+import type { ScenarioReward } from '../scenario'
 import type { GameScreen, GameState, ScenarioId } from './gameState'
 
 export type GameAction =
   | { readonly type: 'OPEN_EVENT'; readonly scenarioId: ScenarioId }
   | { readonly type: 'START_BATTLE' }
-  | { readonly type: 'COMPLETE_BATTLE' }
+  | { readonly type: 'COMPLETE_BATTLE'; readonly reward: ScenarioReward }
   | { readonly type: 'SHOW_LEARNING' }
   | { readonly type: 'RETURN_TO_MAP' }
 
@@ -62,9 +64,26 @@ export function transitionGameState(
         throw new InvalidGameTransitionError(state.currentScreen, action.type)
       }
 
+      const scenarioId = state.battleState.scenarioId
+      const alreadyCompleted =
+        state.player.completedScenarios.includes(scenarioId)
+      const progression = alreadyCompleted
+        ? state.player
+        : addExperience(state.player, action.reward.exp)
+
       return {
         ...state,
         currentScreen: 'RESULT',
+        player: alreadyCompleted
+          ? state.player
+          : {
+              ...state.player,
+              ...progression,
+              completedScenarios: [
+                ...state.player.completedScenarios,
+                scenarioId,
+              ],
+            },
         battleState: {
           ...state.battleState,
           status: 'CLEARED',

@@ -1,3 +1,4 @@
+import { createProgressionState, type ProgressionState } from '../progression'
 import type { ScenarioId } from '../scenario/scenario'
 
 export const GAME_SCREENS = [
@@ -12,9 +13,7 @@ export type GameScreen = (typeof GAME_SCREENS)[number]
 
 export type { ScenarioId } from '../scenario/scenario'
 
-export interface PlayerState {
-  readonly level: number
-  readonly exp: number
+export interface PlayerState extends ProgressionState {
   readonly completedScenarios: readonly ScenarioId[]
   readonly unlockedCommands: readonly string[]
 }
@@ -38,8 +37,7 @@ export function createInitialGameState(): GameState {
     currentScreen: 'MAP',
     currentScenario: null,
     player: {
-      level: 1,
-      exp: 0,
+      ...createProgressionState(),
       completedScenarios: [],
       unlockedCommands: [],
     },
