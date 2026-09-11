@@ -1,0 +1,76 @@
+.screen {
+  width: min(100%, 920px);
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.heading {
+  display: grid;
+  gap: 8px;
+}
+
+.heading h1 {
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-family: var(--mono);
+}
+
+.status,
+.guide,
+.actions,
+.clear {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+}
+
+.status,
+.guide,
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.message {
+  min-height: 1.5em;
+  color: var(--text-h);
+}
+
+.guide h2,
+.actions h2 {
+  flex-basis: 100%;
+}
+
+.actions {
+  display: grid;
+  gap: 16px;
+}
+
+.buttons button,
+.actions > button,
+.clear button {
+  padding: 10px 16px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  cursor: pointer;
+}
+
+.buttons button:disabled,
+.actions > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.clear {
+  border-color: var(--accent);
+}

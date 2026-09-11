@@ -1,0 +1,56 @@
+{
+  "id": "dns-slime",
+  "title": "DNS Slimeの名前解決障害",
+  "enemy": {
+    "id": "dns-slime",
+    "name": "DNS Slime",
+    "maxHp": 100
+  },
+  "network": {
+    "client": {
+      "ipAddress": "192.168.1.10",
+      "subnetMask": "255.255.255.0",
+      "gateway": "192.168.1.1",
+      "dnsServers": ["192.168.1.99"],
+      "linkUp": true
+    },
+    "gateway": {
+      "ipAddress": "192.168.1.1",
+      "online": true
+    },
+    "dns": {
+      "servers": [
+        {
+          "ipAddress": "192.168.1.53",
+          "online": true,
+          "records": {
+            "quest.example": "203.0.113.20"
+          }
+        }
+      ]
+    },
+    "internet": {
+      "online": true,
+      "reachableAddresses": ["203.0.113.20"]
+    }
+  },
+  "failure": {
+    "type": "DNS_MISCONFIGURATION",
+    "description": "ClientのDNS設定がScenario内に存在しないアドレスを参照している。"
+  },
+  "answer": {
+    "cause": "DNS"
+  },
+  "reward": {
+    "exp": 100
+  },
+  "learning": {
+    "summary": "IP到達性と名前解決を順番に確認すると、DNS設定の問題を切り分けられます。",
+    "keyPoints": [
+      "gatewayへのpingでLAN内の到達性を確認する。",
+      "外部IPへのpingでinternet経路を確認する。",
+      "nslookupでDNS名前解決だけが失敗していることを確認する。",
+      "修復後は同じ名前解決を再確認して正常性を証明する。"
+    ]
+  }
+}
