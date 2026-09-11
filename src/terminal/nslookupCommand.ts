@@ -41,6 +41,13 @@ export function createNslookupCommandHandler(
       }
     }
 
+    if (result.reason === 'DNS_MISCONFIGURED') {
+      return {
+        kind: 'error',
+        text: `nslookup: configured DNS server ${result.server} is not available`,
+      }
+    }
+
     return {
       kind: 'error',
       text: [

@@ -60,6 +60,20 @@ describe('createNslookupCommandHandler', () => {
     })
   })
 
+  it('reports a DNS server configuration absent from Scenario State', () => {
+    const simulator = createSimulator({
+      resolved: false,
+      reason: 'DNS_MISCONFIGURED',
+      server: '192.168.1.99',
+    })
+    const handler = createNslookupCommandHandler(simulator)
+
+    expect(handler(['quest.example'])).toEqual({
+      kind: 'error',
+      text: 'nslookup: configured DNS server 192.168.1.99 is not available',
+    })
+  })
+
   it('reports a missing hostname record', () => {
     const simulator = createSimulator({
       resolved: false,

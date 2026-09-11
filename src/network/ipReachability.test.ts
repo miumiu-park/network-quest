@@ -132,8 +132,16 @@ describe('simulatePing', () => {
     })
   })
 
-  it('returns HOST_NOT_FOUND for a hostname before DNS resolution', () => {
+  it('resolves a hostname before checking its IP route', () => {
     expect(simulatePing(baseState, 'quest.example')).toEqual({
+      reachable: true,
+      address: '203.0.113.20',
+      roundTripTimeMs: 12,
+    })
+  })
+
+  it('returns HOST_NOT_FOUND when DNS resolution fails', () => {
+    expect(simulatePing(baseState, 'missing.example')).toEqual({
       reachable: false,
       reason: 'HOST_NOT_FOUND',
     })
