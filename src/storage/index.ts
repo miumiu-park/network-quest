@@ -1,3 +1,4 @@
+export { createInMemoryPlayerProgressRepository } from './inMemoryPlayerProgressRepository'
 export {
   createLocalStoragePlayerProgressRepository,
   PLAYER_PROGRESS_STORAGE_KEY,
