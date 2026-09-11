@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
+import { simulateNslookup } from './dnsSimulation'
+import { simulatePing } from './ipReachability'
 import type { NetworkState } from './networkState'
 import {
   createNetworkSimulator,
@@ -94,5 +96,77 @@ describe('createNetworkSimulator', () => {
       simulator.simulateNslookup('quest.example'),
     )
     expect(simulator.getInterfaceInfo()).toEqual(simulator.getInterfaceInfo())
+  })
+})
+
+describe('Network Simulator rules', () => {
+  const rules: NetworkSimulationRules = { simulatePing, simulateNslookup }
+
+  it('reaches an online gateway on the client subnet', () => {
+    const simulator = createNetworkSimulator(state, rules)
+
+    expect(simulator.simulatePing('gateway')).toEqual({
+      reachable: true,
+      address: '192.168.1.1',
+      roundTripTimeMs: 1,
+    })
+  })
+
+  it('cannot reach an offline gateway', () => {
+    const offlineGatewayState: NetworkState = {
+      ...state,
+      gateway: { ...state.gateway, online: false },
+    }
+    const simulator = createNetworkSimulator(offlineGatewayState, rules)
+
+    expect(simulator.simulatePing('gateway')).toEqual({
+      reachable: false,
+      reason: 'UNREACHABLE',
+    })
+  })
+
+  it('reaches a Scenario-listed external address through a healthy route', () => {
+    const simulator = createNetworkSimulator(state, rules)
+
+    expect(simulator.simulatePing('203.0.113.20')).toEqual({
+      reachable: true,
+      address: '203.0.113.20',
+      roundTripTimeMs: 12,
+    })
+  })
+
+  it('resolves a hostname through the configured Scenario DNS server', () => {
+    const simulator = createNetworkSimulator(state, rules)
+
+    expect(simulator.simulateNslookup('quest.example')).toEqual({
+      resolved: true,
+      server: '192.168.1.53',
+      address: '203.0.113.20',
+    })
+  })
+
+  it('reports a DNS configuration absent from Scenario State', () => {
+    const misconfiguredDnsState: NetworkState = {
+      ...state,
+      client: { ...state.client, dnsServers: ['192.168.1.99'] },
+    }
+    const simulator = createNetworkSimulator(misconfiguredDnsState, rules)
+
+    expect(simulator.simulateNslookup('quest.example')).toEqual({
+      resolved: false,
+      reason: 'DNS_MISCONFIGURED',
+      server: '192.168.1.99',
+    })
+  })
+
+  it('returns deterministic results without external network access', () => {
+    const simulator = createNetworkSimulator(state, rules)
+
+    expect(simulator.simulatePing('quest.example')).toEqual(
+      simulator.simulatePing('quest.example'),
+    )
+    expect(simulator.simulateNslookup('quest.example')).toEqual(
+      simulator.simulateNslookup('quest.example'),
+    )
   })
 })
