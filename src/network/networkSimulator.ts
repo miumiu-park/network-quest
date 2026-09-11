@@ -23,7 +23,8 @@ export type NslookupSimulationResult =
     }
   | {
       readonly resolved: false
-      readonly reason: 'SERVER_UNREACHABLE' | 'HOST_NOT_FOUND'
+      readonly reason:
+        'DNS_MISCONFIGURED' | 'SERVER_UNREACHABLE' | 'HOST_NOT_FOUND'
       readonly server: string
     }
 

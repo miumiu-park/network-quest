@@ -1,6 +1,7 @@
 import type { NetworkState } from './networkState'
 import type { PingSimulationResult } from './networkSimulator'
 import { isIpv4Address } from './networkStateSchema'
+import { simulateNslookup } from './dnsSimulation'
 
 const CLIENT_ROUND_TRIP_TIME_MS = 0
 const GATEWAY_ROUND_TRIP_TIME_MS = 1
@@ -13,7 +14,10 @@ export function simulatePing(
   const address = resolveIpTarget(state, target)
 
   if (address === null) {
-    return { reachable: false, reason: 'HOST_NOT_FOUND' }
+    const dnsResult = simulateNslookup(state, target)
+    return dnsResult.resolved
+      ? simulatePing(state, dnsResult.address)
+      : { reachable: false, reason: 'HOST_NOT_FOUND' }
   }
 
   if (address === state.client.ipAddress) {
