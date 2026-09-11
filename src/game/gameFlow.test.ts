@@ -32,9 +32,16 @@ describe('transitionGameState', () => {
 
     const resultState = transitionGameState(battleState, {
       type: 'COMPLETE_BATTLE',
+      reward: { exp: 100 },
     })
     expect(resultState).toMatchObject({
       currentScreen: 'RESULT',
+      player: {
+        exp: 100,
+        level: 2,
+        nextLevelExp: 300,
+        completedScenarios: [DUMMY_SCENARIO_ID],
+      },
       battleState: { status: 'CLEARED' },
     })
 
@@ -46,7 +53,12 @@ describe('transitionGameState', () => {
     const returnedState = transitionGameState(learningState, {
       type: 'RETURN_TO_MAP',
     })
-    expect(returnedState).toEqual(initialState)
+    expect(returnedState).toMatchObject({
+      currentScreen: 'MAP',
+      currentScenario: null,
+      player: resultState.player,
+      battleState: null,
+    })
   })
 
   it('does not mutate the previous state', () => {
@@ -72,4 +84,57 @@ describe('transitionGameState', () => {
       ),
     )
   })
+
+  it('does not award EXP twice when a completed scenario is replayed', () => {
+    const firstBattle = startBattle(createInitialGameState())
+    const firstResult = transitionGameState(firstBattle, {
+      type: 'COMPLETE_BATTLE',
+      reward: { exp: 100 },
+    })
+    const learningState = transitionGameState(firstResult, {
+      type: 'SHOW_LEARNING',
+    })
+    const mapState = transitionGameState(learningState, {
+      type: 'RETURN_TO_MAP',
+    })
+    const replayBattle = startBattle(mapState)
+
+    const replayResult = transitionGameState(replayBattle, {
+      type: 'COMPLETE_BATTLE',
+      reward: { exp: 100 },
+    })
+
+    expect(replayResult.player).toBe(replayBattle.player)
+    expect(replayResult.player).toMatchObject({
+      exp: 100,
+      level: 2,
+      nextLevelExp: 300,
+      completedScenarios: [DUMMY_SCENARIO_ID],
+    })
+  })
+
+  it('updates the level when a stage reward crosses multiple boundaries', () => {
+    const battleState = startBattle(createInitialGameState())
+
+    const resultState = transitionGameState(battleState, {
+      type: 'COMPLETE_BATTLE',
+      reward: { exp: 650 },
+    })
+
+    expect(resultState.player).toMatchObject({
+      exp: 650,
+      level: 4,
+      nextLevelExp: 1000,
+      completedScenarios: [DUMMY_SCENARIO_ID],
+    })
+  })
 })
+
+function startBattle(state: ReturnType<typeof createInitialGameState>) {
+  const eventState = transitionGameState(state, {
+    type: 'OPEN_EVENT',
+    scenarioId: DUMMY_SCENARIO_ID,
+  })
+
+  return transitionGameState(eventState, { type: 'START_BATTLE' })
+}
