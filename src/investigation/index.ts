@@ -1,4 +1,5 @@
 export { createInvestigationHistory } from './investigationHistory'
+export { createObservations } from './observation'
 export type {
   InvestigationClock,
   InvestigationHistory,
@@ -7,3 +8,8 @@ export type {
   InvestigationResult,
   InvestigationResultKind,
 } from './investigationHistory'
+export type {
+  InvestigationObservation,
+  ObservationCommand,
+  ObservationCommandResult,
+} from './observation'
