@@ -1,3 +1,5 @@
+import type { InvestigationObservation } from './observation'
+
 export type InvestigationResultKind = 'output' | 'error'
 
 export interface InvestigationResult {
@@ -9,6 +11,7 @@ export interface InvestigationHistoryEntry {
   readonly command: string
   readonly args: readonly string[]
   readonly result: InvestigationResult
+  readonly observations: readonly InvestigationObservation[]
   readonly timestamp: number
 }
 
@@ -16,6 +19,7 @@ export interface InvestigationHistoryEntryInput {
   readonly command: string
   readonly args: readonly string[]
   readonly result: InvestigationResult
+  readonly observations?: readonly InvestigationObservation[]
 }
 
 export interface InvestigationHistory {
@@ -38,6 +42,7 @@ export function createInvestigationHistory(
         command: input.command,
         args: input.args,
         result: input.result,
+        observations: input.observations ?? [],
         timestamp: clock(),
       })
 
@@ -57,5 +62,10 @@ function freezeEntry(
     ...entry,
     args: Object.freeze([...entry.args]),
     result: Object.freeze({ ...entry.result }),
+    observations: Object.freeze(
+      entry.observations.map((observation) =>
+        Object.freeze({ ...observation }),
+      ),
+    ),
   })
 }
