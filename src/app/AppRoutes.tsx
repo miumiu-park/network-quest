@@ -10,6 +10,7 @@ import {
 import type { LearningReview as LearningReviewModel } from '../learning'
 import { DNS_SLIME_SCENARIO } from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
+import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { APP_ROUTES } from './routes'
 
@@ -43,15 +44,6 @@ function BattleRoute() {
       <p>Scenario: {scenarioId}</p>
       <p>このScenarioは見つかりません。</p>
       <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
-    </Screen>
-  )
-}
-
-function VillageRoute() {
-  return (
-    <Screen title="LAN Village">
-      <p>名前解決を妨害するモンスターが現れました。</p>
-      <Link to={`/battle/${DNS_SLIME_SCENARIO.id}`}>DNS Slimeに挑戦</Link>
     </Screen>
   )
 }
@@ -105,7 +97,7 @@ export function AppRoutes() {
         path={APP_ROUTES.home}
         element={<Navigate to={APP_ROUTES.village} replace />}
       />
-      <Route path={APP_ROUTES.village} element={<VillageRoute />} />
+      <Route path={APP_ROUTES.village} element={<LanVillage />} />
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />
       <Route path={APP_ROUTES.result} element={<ResultRoute />} />
       <Route path={APP_ROUTES.learning} element={<LearningRoute />} />
