@@ -12,13 +12,4 @@ export type {
   CommandParseResult,
   ParsedCommand,
 } from './commandParser'
-export type {
-  ClientInterfaceInfo,
-  InterfaceInfoProviderPort,
-} from './ipCommand'
-export type {
-  NslookupSimulationResult,
-  NslookupSimulatorPort,
-} from './nslookupCommand'
-export type { PingSimulationResult, PingSimulatorPort } from './pingCommand'
 export type { TerminalExecutor, TerminalResult } from './terminalTypes'
