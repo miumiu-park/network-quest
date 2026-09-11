@@ -1,7 +1,16 @@
 import type { ReactNode } from 'react'
-import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom'
+import {
+  Link,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from 'react-router-dom'
+import type { LearningReview as LearningReviewModel } from '../learning'
 import { DNS_SLIME_SCENARIO } from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
+import { LearningReview } from './LearningReview'
 import { APP_ROUTES } from './routes'
 
 interface ScreenProps {
@@ -48,27 +57,45 @@ function VillageRoute() {
 }
 
 function ResultRoute() {
+  const location = useLocation()
+
   return (
     <Screen title="Result">
       <h2>DNS Slime 撃破</h2>
       <p>獲得EXP: {DNS_SLIME_SCENARIO.reward.exp}</p>
-      <Link to={APP_ROUTES.learning}>学習レビューへ</Link>
+      <Link to={APP_ROUTES.learning} state={location.state}>
+        学習レビューへ
+      </Link>
     </Screen>
   )
 }
 
 function LearningRoute() {
+  const location = useLocation()
+  const review = getLearningReview(location.state)
+
+  if (review !== null) {
+    return <LearningReview review={review} />
+  }
+
   return (
     <Screen title="Learning">
-      <p>{DNS_SLIME_SCENARIO.learning.summary}</p>
-      <ul>
-        {DNS_SLIME_SCENARIO.learning.keyPoints.map((keyPoint) => (
-          <li key={keyPoint}>{keyPoint}</li>
-        ))}
-      </ul>
+      <p>Battleをクリアすると、ここで調査手順を振り返れます。</p>
       <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
     </Screen>
   )
+}
+
+function getLearningReview(state: unknown): LearningReviewModel | null {
+  if (
+    typeof state !== 'object' ||
+    state === null ||
+    !('learningReview' in state)
+  ) {
+    return null
+  }
+
+  return state.learningReview as LearningReviewModel
 }
 
 export function AppRoutes() {
