@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
+import type {
+  NetworkSimulator,
+  NslookupSimulationResult,
+} from '../network/networkSimulator'
 import { createCommandExecutor } from './commandExecutor'
-import {
-  createNslookupCommandHandler,
-  type NslookupSimulationResult,
-  type NslookupSimulatorPort,
-} from './nslookupCommand'
+import { createNslookupCommandHandler } from './nslookupCommand'
 
 function createSimulator(
   result: NslookupSimulationResult,
-): NslookupSimulatorPort {
+): Pick<NetworkSimulator, 'simulateNslookup'> {
   return { simulateNslookup: vi.fn(() => result) }
 }
 

@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
+import type {
+  NetworkSimulator,
+  PingSimulationResult,
+} from '../network/networkSimulator'
 import { createCommandExecutor } from './commandExecutor'
-import {
-  createPingCommandHandler,
-  type PingSimulationResult,
-  type PingSimulatorPort,
-} from './pingCommand'
+import { createPingCommandHandler } from './pingCommand'
 
-function createSimulator(result: PingSimulationResult): PingSimulatorPort {
+function createSimulator(
+  result: PingSimulationResult,
+): Pick<NetworkSimulator, 'simulatePing'> {
   return { simulatePing: vi.fn(() => result) }
 }
 

@@ -1,26 +1,8 @@
 import type { CommandHandler } from './commandExecutor'
-
-export type PingSimulationResult =
-  | {
-      readonly reachable: true
-      readonly address: string
-      readonly roundTripTimeMs: number
-    }
-  | {
-      readonly reachable: false
-      readonly reason: 'UNREACHABLE' | 'HOST_NOT_FOUND'
-    }
-
-/**
- * Port implemented by the virtual Network Simulator.
- * Implementations must derive results only from validated Scenario State.
- */
-export interface PingSimulatorPort {
-  simulatePing(target: string): PingSimulationResult
-}
+import type { NetworkSimulator } from '../network/networkSimulator'
 
 export function createPingCommandHandler(
-  simulator: PingSimulatorPort,
+  simulator: Pick<NetworkSimulator, 'simulatePing'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 1) {

@@ -1,31 +1,8 @@
 import type { CommandHandler } from './commandExecutor'
-
-export type NslookupSimulationResult =
-  | {
-      readonly resolved: true
-      readonly server: string
-      readonly address: string
-    }
-  | {
-      readonly resolved: false
-      readonly reason: 'DNS_NOT_CONFIGURED'
-    }
-  | {
-      readonly resolved: false
-      readonly reason: 'SERVER_UNREACHABLE' | 'HOST_NOT_FOUND'
-      readonly server: string
-    }
-
-/**
- * Port implemented by the virtual Network Simulator.
- * Implementations must resolve names from Scenario State without real DNS I/O.
- */
-export interface NslookupSimulatorPort {
-  simulateNslookup(hostname: string): NslookupSimulationResult
-}
+import type { NetworkSimulator } from '../network/networkSimulator'
 
 export function createNslookupCommandHandler(
-  simulator: NslookupSimulatorPort,
+  simulator: Pick<NetworkSimulator, 'simulateNslookup'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 1) {
