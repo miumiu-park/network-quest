@@ -22,6 +22,7 @@ describe('createInvestigationHistory', () => {
       command: 'ping',
       args: ['gateway'],
       result: { kind: 'output', text: 'Reply from 192.168.1.1' },
+      observations: [],
       timestamp: 1_789_084_800_000,
     })
     expect(history.getEntries()).toEqual([entry])
@@ -72,6 +73,7 @@ describe('createInvestigationHistory', () => {
     expect(Object.isFrozen(entries[0])).toBe(true)
     expect(Object.isFrozen(entries[0].args)).toBe(true)
     expect(Object.isFrozen(entries[0].result)).toBe(true)
+    expect(Object.isFrozen(entries[0].observations)).toBe(true)
   })
 
   it('keeps separate history instances isolated', () => {
