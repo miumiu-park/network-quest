@@ -1,4 +1,4 @@
-export { createBattleEngine } from './battleEngine'
+export { CAUSE_ANSWER_OPTIONS, createBattleEngine } from './battleEngine'
 export { applyInvestigationObservations } from './investigationDamage'
 export type {
   BattleEngine,
@@ -6,6 +6,9 @@ export type {
   BattleEngineState,
   BattleEngineStatus,
   BattleInvestigationResult,
+  CauseAnswer,
+  CauseAnswerResult,
+  DiagnosisStatus,
   InvestigationEffectiveness,
 } from './battleEngine'
 export type { ObservationEffectivenessEvaluator } from './investigationDamage'
