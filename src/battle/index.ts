@@ -1,4 +1,5 @@
 export { createBattleEngine } from './battleEngine'
+export { applyInvestigationObservations } from './investigationDamage'
 export type {
   BattleEngine,
   BattleEngineConfig,
@@ -7,3 +8,4 @@ export type {
   BattleInvestigationResult,
   InvestigationEffectiveness,
 } from './battleEngine'
+export type { ObservationEffectivenessEvaluator } from './investigationDamage'
