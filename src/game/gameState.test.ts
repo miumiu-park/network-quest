@@ -23,6 +23,7 @@ describe('GameState', () => {
       player: {
         level: 1,
         exp: 0,
+        nextLevelExp: 100,
         completedScenarios: [],
         unlockedCommands: [],
       },
