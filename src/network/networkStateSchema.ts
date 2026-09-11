@@ -36,7 +36,7 @@ export const networkStateSchema: z.ZodType<NetworkState> = z.strictObject({
   }),
 })
 
-function isIpv4Address(value: string): boolean {
+export function isIpv4Address(value: string): boolean {
   const octets = value.split('.')
 
   return (
