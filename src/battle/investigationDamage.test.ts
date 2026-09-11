@@ -6,6 +6,7 @@ import { applyInvestigationObservations } from './investigationDamage'
 const engine = createBattleEngine({
   enemyMaxHp: 100,
   effectiveInvestigationDamage: 30,
+  correctCause: 'DNS',
 })
 
 function isDnsFailure(observation: InvestigationObservation): boolean {
