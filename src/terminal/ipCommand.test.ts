@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
+import type {
+  ClientInterfaceInfo,
+  NetworkSimulator,
+} from '../network/networkSimulator'
 import { createCommandExecutor } from './commandExecutor'
-import {
-  createIpCommandHandler,
-  type ClientInterfaceInfo,
-  type InterfaceInfoProviderPort,
-} from './ipCommand'
+import { createIpCommandHandler } from './ipCommand'
 
-function createProvider(info: ClientInterfaceInfo): InterfaceInfoProviderPort {
+function createProvider(
+  info: ClientInterfaceInfo,
+): Pick<NetworkSimulator, 'getInterfaceInfo'> {
   return { getInterfaceInfo: vi.fn(() => info) }
 }
 

@@ -1,22 +1,8 @@
 import type { CommandHandler } from './commandExecutor'
-
-export interface ClientInterfaceInfo {
-  readonly ipAddress: string
-  readonly subnetMask: string
-  readonly gateway: string
-  readonly dnsServers: readonly string[]
-}
-
-/**
- * Port implemented by the virtual Network Simulator.
- * Implementations must return Scenario State, never host interface information.
- */
-export interface InterfaceInfoProviderPort {
-  getInterfaceInfo(): ClientInterfaceInfo
-}
+import type { NetworkSimulator } from '../network/networkSimulator'
 
 export function createIpCommandHandler(
-  provider: InterfaceInfoProviderPort,
+  provider: Pick<NetworkSimulator, 'getInterfaceInfo'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 0) {
