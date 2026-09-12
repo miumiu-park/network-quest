@@ -64,3 +64,7 @@ npm run build
 - CIとreviewの成功後にSquash Mergeします。
 
 詳細は[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
+
+## GitHub Pages
+
+`main`へmergeされると、GitHub Actionsがproduction buildを作成し、GitHub Pagesへdeployします。公開先ではrepository名をbase pathとして使用し、SPAの直接アクセスには`404.html` fallbackを利用します。
