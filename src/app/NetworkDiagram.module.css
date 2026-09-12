@@ -1,0 +1,105 @@
+.diagram {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.mainPath {
+  display: grid;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mainPath li {
+  position: relative;
+}
+
+.mainPath li:not(:last-child)::after {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  color: var(--accent);
+  content: '↓';
+  font-family: var(--mono);
+  transform: translateX(-50%);
+}
+
+.node {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  padding: 11px;
+}
+
+.nodeMarker {
+  width: 13px;
+  height: 13px;
+  border: 3px solid var(--accent-border);
+  border-radius: 50%;
+  background: var(--accent-bg);
+}
+
+.node h3 {
+  margin: 0 0 2px;
+  color: var(--text-h);
+  font-size: 0.78rem;
+}
+
+.node code {
+  padding: 0;
+  background: transparent;
+  font-size: 0.66rem;
+}
+
+.dnsBranch {
+  display: grid;
+  gap: 7px;
+  border-left: 2px solid var(--accent-border);
+  padding-left: 10px;
+}
+
+.dnsBranch > p,
+.diagram figcaption {
+  color: var(--text);
+  font: 700 0.58rem/1.4 var(--mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.diagram figcaption {
+  text-align: right;
+}
+
+.details {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.details dt {
+  color: var(--text);
+  font-size: 0.72rem;
+}
+
+.details dd {
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-align: right;
+}

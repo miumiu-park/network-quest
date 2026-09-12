@@ -10,6 +10,16 @@ const scenario: Scenario = {
     location: 'LAN Village',
     symptom: 'The village guide cannot open quest.example.',
   },
+  topology: {
+    mainPath: [
+      { id: 'pc', name: 'PC', detail: '192.168.1.10' },
+      { id: 'switch', name: 'Switch', detail: 'LAN / Layer 2' },
+      { id: 'router', name: 'Router', detail: '192.168.1.1' },
+      { id: 'internet', name: 'Internet', detail: '203.0.113.20' },
+    ],
+    dnsNode: { id: 'dns', name: 'DNS', detail: '192.168.1.53' },
+    dnsConnectionLabel: 'DNS query',
+  },
   enemy: { id: 'dns-slime', name: 'DNS Slime', maxHp: 100 },
   network: {
     client: {
