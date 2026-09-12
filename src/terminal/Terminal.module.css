@@ -1,5 +1,6 @@
 .terminal {
-  width: min(760px, calc(100% - 40px));
+  box-sizing: border-box;
+  width: 100%;
   overflow: hidden;
   color: #d8f3dc;
   background: #07130d;
@@ -151,10 +152,6 @@
 }
 
 @media (max-width: 560px) {
-  .terminal {
-    width: calc(100% - 24px);
-  }
-
   .history {
     min-height: 180px;
   }
