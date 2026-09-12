@@ -35,6 +35,8 @@ describe('DNS Slime playable scenario', () => {
 
     await user.type(terminal, 'ping gateway{enter}')
     expect(screen.getByText(/Reply from 192\.168\.1\.1/)).toBeInTheDocument()
+    expect(screen.getByText('Investigation Success')).toBeInTheDocument()
+    expect(screen.getByText('Enemy Damage')).toBeInTheDocument()
 
     await user.type(terminal, 'ping 203.0.113.20{enter}')
     expect(screen.getByText(/Reply from 203\.0\.113\.20/)).toBeInTheDocument()
@@ -44,6 +46,7 @@ describe('DNS Slime playable scenario', () => {
 
     await user.click(screen.getByRole('button', { name: 'DNS' }))
     expect(screen.getByText(/正解です/)).toBeInTheDocument()
+    expect(screen.getByText('Weakness Found')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'DNS設定を修復' }))
     expect(screen.getByText('REPAIRED')).toBeInTheDocument()

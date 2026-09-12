@@ -36,6 +36,7 @@ import {
   Terminal,
   type TerminalExecutor,
 } from '../terminal'
+import { BattleEffects } from './BattleEffects'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import styles from './DnsSlimeBattle.module.css'
@@ -198,7 +199,13 @@ export function DnsSlimeBattle() {
             <p className={styles.paneNumber}>01</p>
             <h2>Enemy</h2>
           </div>
-          <div className={styles.enemyPortrait} aria-hidden="true">
+          <div
+            className={`${styles.enemyPortrait} ${
+              battleState.totalDamage > 0 ? styles.enemyDamaged : ''
+            }`}
+            key={`enemy-${battleState.totalDamage}`}
+            aria-hidden="true"
+          >
             🦠
           </div>
           <h3>{DNS_SLIME_SCENARIO.enemy.name}</h3>
@@ -297,6 +304,7 @@ export function DnsSlimeBattle() {
           </button>
         </section>
       )}
+      <BattleEffects state={battleState} />
     </main>
   )
 }

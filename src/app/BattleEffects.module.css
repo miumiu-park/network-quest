@@ -1,0 +1,83 @@
+.effects {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 10;
+  display: grid;
+  gap: 8px;
+  width: min(300px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.effect {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
+  backdrop-filter: blur(8px);
+  animation: effect-arrive 1.8s ease both;
+}
+
+.effect strong {
+  color: var(--text-h);
+  font: 700 0.75rem/1.3 var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.effect span {
+  color: var(--text);
+  font-size: 0.68rem;
+  text-align: right;
+}
+
+.success {
+  border-left: 4px solid #22c55e;
+}
+
+.damage {
+  border-left: 4px solid #f97316;
+}
+
+.weakness {
+  border-left: 4px solid var(--accent);
+}
+
+@keyframes effect-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+
+  12%,
+  82% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .effect {
+    animation: effect-reduced 1.8s step-end both;
+  }
+}
+
+@keyframes effect-reduced {
+  0%,
+  99% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
