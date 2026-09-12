@@ -1,0 +1,185 @@
+.screen {
+  box-sizing: border-box;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 82% 12%, var(--accent-bg), transparent 30%),
+    var(--bg);
+  text-align: left;
+}
+
+.header,
+.eventCard,
+.mission,
+.actions {
+  width: min(100%, 880px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header h1 {
+  margin: 4px 0 0;
+}
+
+.eyebrow,
+.speakerLabel,
+.location,
+.status {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.location {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--text-h);
+  white-space: nowrap;
+}
+
+.eventCard {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--accent-border);
+  border-radius: 20px;
+  background: var(--social-bg);
+  box-shadow: var(--shadow);
+}
+
+.portrait {
+  display: grid;
+  min-height: 290px;
+  place-items: center;
+  border-right: 1px solid var(--border);
+  background:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px), var(--code-bg);
+  background-size: 28px 28px;
+  font-size: 5.5rem;
+}
+
+.dialogue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px;
+}
+
+.dialogue h2 {
+  margin: 5px 0 22px;
+}
+
+.dialogue blockquote {
+  margin: 0;
+  color: var(--text-h);
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  line-height: 1.85;
+}
+
+.mission {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--code-bg);
+  padding: 20px 24px;
+}
+
+.mission h2,
+.mission p {
+  margin: 4px 0;
+}
+
+.mission h2 {
+  font-size: 1.12rem;
+}
+
+.status {
+  border-radius: 999px;
+  background: var(--accent-bg);
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.primaryAction,
+.secondaryAction {
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primaryAction {
+  background: var(--accent);
+  color: #fff;
+}
+
+.secondaryAction {
+  border: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  outline: 3px solid var(--accent-border);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .screen {
+    padding: 24px 16px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .eventCard {
+    grid-template-columns: 1fr;
+  }
+
+  .portrait {
+    min-height: 150px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dialogue {
+    padding: 24px;
+  }
+
+  .mission {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    text-align: center;
+  }
+}
