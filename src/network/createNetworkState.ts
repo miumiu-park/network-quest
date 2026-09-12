@@ -63,5 +63,12 @@ export function freezeNetworkState(state: NetworkState): NetworkState {
       ...state.internet,
       reachableAddresses: Object.freeze([...state.internet.reachableAddresses]),
     }),
+    ...(state.lanPeers === undefined
+      ? {}
+      : {
+          lanPeers: Object.freeze(
+            state.lanPeers.map((peer) => Object.freeze({ ...peer })),
+          ),
+        }),
   })
 }

@@ -14,10 +14,11 @@ describe('cause answer', () => {
       'GATEWAY',
       'DNS',
       'FIREWALL',
+      'SUBNET_MASK',
     ])
   })
 
-  it.each(['IP_ADDRESS', 'GATEWAY', 'FIREWALL'] as const)(
+  it.each(['IP_ADDRESS', 'GATEWAY', 'FIREWALL', 'SUBNET_MASK'] as const)(
     'records %s as an incorrect answer for DNS Slime',
     (answer) => {
       const state = dnsSlimeBattle.submitCauseAnswer(

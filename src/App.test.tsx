@@ -38,6 +38,7 @@ describe('App routing', () => {
     ['/event/dns-slime', 'NPC Event'],
     ['/event/gateway-goblin', 'NPC Event'],
     ['/event/ip-slime', 'NPC Event'],
+    ['/event/subnet-golem', 'NPC Event'],
     ['/result', 'Result'],
     ['/learning', 'Learning'],
   ])('renders %s as the %s screen', (route, heading) => {

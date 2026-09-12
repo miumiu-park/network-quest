@@ -1,0 +1,89 @@
+{
+  "id": "subnet-golem",
+  "title": "Subnet Golemの境界障害",
+  "event": {
+    "npcName": "Network Architect",
+    "location": "LAN Village Operations Hall",
+    "symptom": "管理端末から近くの端末には通信できるが、同じLANにいる別の端末には到達できない。Cableや各端末の稼働状態には問題がない。"
+  },
+  "topology": {
+    "mainPath": [
+      { "id": "admin-pc", "name": "Admin PC", "detail": "192.168.1.10 /25" },
+      { "id": "switch", "name": "Switch", "detail": "LAN / Layer 2" },
+      { "id": "router", "name": "Router", "detail": "192.168.1.1" },
+      { "id": "internet", "name": "Internet", "detail": "203.0.113.30" }
+    ],
+    "dnsNode": {
+      "id": "peer-terminals",
+      "name": "Peer Terminals",
+      "detail": ".20 / .130"
+    },
+    "dnsConnectionLabel": "Switch → LAN peers"
+  },
+  "enemy": {
+    "id": "subnet-golem",
+    "name": "Subnet Golem",
+    "maxHp": 160
+  },
+  "network": {
+    "client": {
+      "ipAddress": "192.168.1.10",
+      "subnetMask": "255.255.255.128",
+      "gateway": "192.168.1.1",
+      "dnsServers": ["192.168.1.53"],
+      "linkUp": true
+    },
+    "gateway": {
+      "ipAddress": "192.168.1.1",
+      "online": true
+    },
+    "dns": {
+      "servers": [
+        {
+          "ipAddress": "192.168.1.53",
+          "online": true,
+          "records": {
+            "subnet-quest.example": "203.0.113.30"
+          }
+        }
+      ]
+    },
+    "internet": {
+      "online": true,
+      "reachableAddresses": ["203.0.113.30"]
+    },
+    "lanPeers": [
+      {
+        "name": "Workshop Terminal A",
+        "ipAddress": "192.168.1.20",
+        "subnetMask": "255.255.255.0",
+        "online": true
+      },
+      {
+        "name": "Workshop Terminal B",
+        "ipAddress": "192.168.1.130",
+        "subnetMask": "255.255.255.0",
+        "online": true
+      }
+    ]
+  },
+  "failure": {
+    "type": "SUBNET_MASK_MISCONFIGURATION",
+    "description": "管理端末だけSubnet Maskが/25になっており、本来同じ/24 LANにいる端末を別networkと判定している。"
+  },
+  "answer": {
+    "cause": "SUBNET_MASK"
+  },
+  "reward": {
+    "exp": 180
+  },
+  "learning": {
+    "summary": "同じLAN内の複数端末へpingし、到達できるaddress範囲を比較すると、Subnet Maskによる境界の誤りを特定できます。",
+    "keyPoints": [
+      "ip commandでIP AddressとSubnet Maskを確認する。",
+      "同じLANの異なるaddress帯にある複数端末へpingする。",
+      "到達できる端末とできない端末のnetwork範囲をSubnet Maskから比較する。",
+      "修復後は両方の端末へpingを再実行して到達性の回復を確認する。"
+    ]
+  }
+}
