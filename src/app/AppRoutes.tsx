@@ -8,8 +8,9 @@ import {
   useParams,
 } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
-import { DNS_SLIME_SCENARIO } from '../scenario'
+import { DNS_SLIME_SCENARIO, GATEWAY_GOBLIN_SCENARIO } from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
+import { GatewayGoblinBattle } from './GatewayGoblinBattle'
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
@@ -40,6 +41,10 @@ function BattleRoute() {
     return <DnsSlimeBattle />
   }
 
+  if (scenarioId === GATEWAY_GOBLIN_SCENARIO.id) {
+    return <GatewayGoblinBattle />
+  }
+
   return (
     <Screen title="Battle">
       <p>Scenario: {scenarioId}</p>
@@ -60,6 +65,10 @@ function EventRoute() {
     return <NpcEvent scenario={DNS_SLIME_SCENARIO} />
   }
 
+  if (scenarioId === GATEWAY_GOBLIN_SCENARIO.id) {
+    return <NpcEvent scenario={GATEWAY_GOBLIN_SCENARIO} />
+  }
+
   return (
     <Screen title="NPC Event">
       <p>この依頼は見つかりません。</p>
@@ -70,16 +79,43 @@ function EventRoute() {
 
 function ResultRoute() {
   const location = useLocation()
+  const result = getResultSummary(location.state)
 
   return (
     <Screen title="Result">
-      <h2>DNS Slime 撃破</h2>
-      <p>獲得EXP: {DNS_SLIME_SCENARIO.reward.exp}</p>
+      <h2>{result.enemyName} 撃破</h2>
+      <p>獲得EXP: {result.exp}</p>
       <Link to={APP_ROUTES.learning} state={location.state}>
         学習レビューへ
       </Link>
     </Screen>
   )
+}
+
+interface ResultSummary {
+  readonly enemyName: string
+  readonly exp: number
+}
+
+function getResultSummary(state: unknown): ResultSummary {
+  if (
+    typeof state === 'object' &&
+    state !== null &&
+    'resultSummary' in state &&
+    typeof state.resultSummary === 'object' &&
+    state.resultSummary !== null &&
+    'enemyName' in state.resultSummary &&
+    typeof state.resultSummary.enemyName === 'string' &&
+    'exp' in state.resultSummary &&
+    typeof state.resultSummary.exp === 'number'
+  ) {
+    return state.resultSummary as ResultSummary
+  }
+
+  return {
+    enemyName: DNS_SLIME_SCENARIO.enemy.name,
+    exp: DNS_SLIME_SCENARIO.reward.exp,
+  }
 }
 
 function LearningRoute() {
