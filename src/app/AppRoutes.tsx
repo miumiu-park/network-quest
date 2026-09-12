@@ -8,9 +8,14 @@ import {
   useParams,
 } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
-import { DNS_SLIME_SCENARIO, GATEWAY_GOBLIN_SCENARIO } from '../scenario'
+import {
+  DNS_SLIME_SCENARIO,
+  GATEWAY_GOBLIN_SCENARIO,
+  IP_SLIME_SCENARIO,
+} from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
 import { GatewayGoblinBattle } from './GatewayGoblinBattle'
+import { IpSlimeBattle } from './IpSlimeBattle'
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
@@ -45,6 +50,10 @@ function BattleRoute() {
     return <GatewayGoblinBattle />
   }
 
+  if (scenarioId === IP_SLIME_SCENARIO.id) {
+    return <IpSlimeBattle />
+  }
+
   return (
     <Screen title="Battle">
       <p>Scenario: {scenarioId}</p>
@@ -67,6 +76,10 @@ function EventRoute() {
 
   if (scenarioId === GATEWAY_GOBLIN_SCENARIO.id) {
     return <NpcEvent scenario={GATEWAY_GOBLIN_SCENARIO} />
+  }
+
+  if (scenarioId === IP_SLIME_SCENARIO.id) {
+    return <NpcEvent scenario={IP_SLIME_SCENARIO} />
   }
 
   return (

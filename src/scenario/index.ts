@@ -10,6 +10,11 @@ export {
   GATEWAY_GOBLIN_EXTERNAL_IP,
   GATEWAY_GOBLIN_SCENARIO,
 } from './gatewayGoblinScenario'
+export {
+  IP_SLIME_CORRECT_ADDRESS,
+  IP_SLIME_GATEWAY,
+  IP_SLIME_SCENARIO,
+} from './ipSlimeScenario'
 export { loadScenario } from './loadScenario'
 export type { ScenarioLoadError, ScenarioLoadResult } from './loadScenario'
 export type {

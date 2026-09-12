@@ -1,0 +1,75 @@
+{
+  "id": "ip-slime",
+  "title": "IP SlimeのAddress障害",
+  "event": {
+    "npcName": "Host Keeper",
+    "location": "LAN Village Workshop",
+    "symptom": "このPCだけVillage内の機器へ接続できない。Cableは接続されていて、同じ場所にある他のPCは問題なく通信できている。"
+  },
+  "topology": {
+    "mainPath": [
+      { "id": "pc", "name": "PC", "detail": "192.168.1.10" },
+      { "id": "switch", "name": "Switch", "detail": "LAN / Layer 2" },
+      { "id": "router", "name": "Router", "detail": "192.168.1.1" },
+      { "id": "internet", "name": "Internet", "detail": "203.0.113.20" }
+    ],
+    "dnsNode": {
+      "id": "dns",
+      "name": "DNS",
+      "detail": "192.168.1.53"
+    },
+    "dnsConnectionLabel": "Switch → DNS query"
+  },
+  "enemy": {
+    "id": "ip-slime",
+    "name": "IP Slime",
+    "maxHp": 100
+  },
+  "network": {
+    "client": {
+      "ipAddress": "192.168.2.10",
+      "subnetMask": "255.255.255.0",
+      "gateway": "192.168.1.1",
+      "dnsServers": ["192.168.1.53"],
+      "linkUp": true
+    },
+    "gateway": {
+      "ipAddress": "192.168.1.1",
+      "online": true
+    },
+    "dns": {
+      "servers": [
+        {
+          "ipAddress": "192.168.1.53",
+          "online": true,
+          "records": {
+            "ip-quest.example": "203.0.113.20"
+          }
+        }
+      ]
+    },
+    "internet": {
+      "online": true,
+      "reachableAddresses": ["203.0.113.20"]
+    }
+  },
+  "failure": {
+    "type": "IP_ADDRESS_MISCONFIGURATION",
+    "description": "ClientのIP AddressがRouterとは異なるsubnetに設定されている。"
+  },
+  "answer": {
+    "cause": "IP_ADDRESS"
+  },
+  "reward": {
+    "exp": 100
+  },
+  "learning": {
+    "summary": "IP AddressとSubnet MaskをGatewayのnetworkと比較すると、同一LAN内の設定問題を切り分けられます。",
+    "keyPoints": [
+      "ip commandで現在のIP Address、Subnet Mask、Gatewayを確認する。",
+      "Gatewayへのpingで同一LAN内の到達性を確認する。",
+      "IP AddressとSubnet Maskから所属networkを比較する。",
+      "修復後はGatewayへのpingを再実行して到達性の回復を確認する。"
+    ]
+  }
+}
