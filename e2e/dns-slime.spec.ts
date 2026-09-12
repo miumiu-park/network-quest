@@ -15,7 +15,7 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   await page.getByRole('button', { name: /DNS Slime/ }).click()
   await page.getByRole('link', { name: '依頼を確認' }).click()
   await expect(page).toHaveURL(/\/event\/dns-slime$/)
-  await expect(page.getByRole('heading', { name: 'DNS Slime' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Net Sage' })).toBeVisible()
 
   await page.getByRole('link', { name: '調査を開始' }).click()
   await expect(page).toHaveURL(/\/battle\/dns-slime$/)
