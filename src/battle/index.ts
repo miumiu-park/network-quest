@@ -1,6 +1,11 @@
 export { CAUSE_ANSWER_OPTIONS, createBattleEngine } from './battleEngine'
 export { applyInvestigationObservations } from './investigationDamage'
-export { recordDnsRepair, verifyDnsRepair } from './repairVerification'
+export {
+  recordDnsRepair,
+  recordGatewayRepair,
+  verifyDnsRepair,
+  verifyGatewayRepair,
+} from './repairVerification'
 export type {
   BattleEngine,
   BattleEngineConfig,
@@ -15,4 +20,7 @@ export type {
   RepairVerificationStatus,
 } from './battleEngine'
 export type { ObservationEffectivenessEvaluator } from './investigationDamage'
-export type { DnsRepairVerificationResult } from './repairVerification'
+export type {
+  DnsRepairVerificationResult,
+  GatewayRepairVerificationResult,
+} from './repairVerification'

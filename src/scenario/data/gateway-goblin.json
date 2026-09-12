@@ -1,0 +1,75 @@
+{
+  "id": "gateway-goblin",
+  "title": "Gateway Goblinの経路障害",
+  "event": {
+    "npcName": "Route Keeper",
+    "location": "LAN Village Gate",
+    "symptom": "Village内の端末同士は通信できるのに、外のQuest Serverへ接続できなくなった。接続先のIP addressを指定しても応答がない。"
+  },
+  "topology": {
+    "mainPath": [
+      { "id": "pc", "name": "PC", "detail": "192.168.1.10" },
+      { "id": "switch", "name": "Switch", "detail": "LAN / Layer 2" },
+      { "id": "router", "name": "Router", "detail": "192.168.1.1" },
+      { "id": "internet", "name": "Internet", "detail": "203.0.113.20" }
+    ],
+    "dnsNode": {
+      "id": "dns",
+      "name": "DNS",
+      "detail": "192.168.1.53"
+    },
+    "dnsConnectionLabel": "Switch → DNS query"
+  },
+  "enemy": {
+    "id": "gateway-goblin",
+    "name": "Gateway Goblin",
+    "maxHp": 100
+  },
+  "network": {
+    "client": {
+      "ipAddress": "192.168.1.10",
+      "subnetMask": "255.255.255.0",
+      "gateway": "192.168.1.254",
+      "dnsServers": ["192.168.1.53"],
+      "linkUp": true
+    },
+    "gateway": {
+      "ipAddress": "192.168.1.1",
+      "online": true
+    },
+    "dns": {
+      "servers": [
+        {
+          "ipAddress": "192.168.1.53",
+          "online": true,
+          "records": {
+            "gateway-quest.example": "203.0.113.20"
+          }
+        }
+      ]
+    },
+    "internet": {
+      "online": true,
+      "reachableAddresses": ["203.0.113.20"]
+    }
+  },
+  "failure": {
+    "type": "GATEWAY_MISCONFIGURATION",
+    "description": "ClientのDefault GatewayがScenario内のRouterと異なるaddressを参照している。"
+  },
+  "answer": {
+    "cause": "GATEWAY"
+  },
+  "reward": {
+    "exp": 120
+  },
+  "learning": {
+    "summary": "LAN内の到達性と外部への到達性を比較すると、Default Gatewayの設定問題を切り分けられます。",
+    "keyPoints": [
+      "ip commandで現在のDefault Gatewayを確認する。",
+      "RouterのIP addressへpingしてLAN内の到達性を確認する。",
+      "外部IPへのping失敗と設定値を比較して原因を特定する。",
+      "修復後は外部IPへのpingを再実行して経路の回復を確認する。"
+    ]
+  }
+}

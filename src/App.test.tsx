@@ -36,6 +36,7 @@ describe('App routing', () => {
   it.each([
     ['/village', 'LAN Village'],
     ['/event/dns-slime', 'NPC Event'],
+    ['/event/gateway-goblin', 'NPC Event'],
     ['/result', 'Result'],
     ['/learning', 'Learning'],
   ])('renders %s as the %s screen', (route, heading) => {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DNS_SLIME_SCENARIO } from '../scenario'
+import { DNS_SLIME_SCENARIO, GATEWAY_GOBLIN_SCENARIO } from '../scenario'
 import styles from './LanVillage.module.css'
 
 const VILLAGE_ENTITIES = [
@@ -37,6 +37,14 @@ const VILLAGE_ENTITIES = [
     status: 'COMING SOON',
     description: 'Subnetの境界を守るゴーレム。現在は準備中です。',
   },
+  {
+    id: 'gateway-goblin',
+    name: 'Gateway Goblin',
+    role: 'Default Route',
+    icon: '👺',
+    status: 'BATTLE',
+    description: 'Villageの外へ続く経路に潜むモンスター。調査可能です。',
+  },
 ] as const
 
 type VillageEntityId = (typeof VILLAGE_ENTITIES)[number]['id']
@@ -65,7 +73,7 @@ export function LanVillage() {
         <section className={styles.map} aria-label="LAN Village map">
           <div className={styles.mapLabel}>
             <span>192.168.1.0/24</span>
-            <span>4 nodes</span>
+            <span>5 nodes</span>
           </div>
           <div className={styles.nodes}>
             {VILLAGE_ENTITIES.map((entity) => (
@@ -118,6 +126,14 @@ export function LanVillage() {
               to={`/event/${DNS_SLIME_SCENARIO.id}`}
             >
               {selected.id === 'npc' ? '症状を聞く' : '依頼を確認'}
+            </Link>
+          )}
+          {selected.id === 'gateway-goblin' && (
+            <Link
+              className={styles.primaryAction}
+              to={`/event/${GATEWAY_GOBLIN_SCENARIO.id}`}
+            >
+              依頼を確認
             </Link>
           )}
           {selected.id === 'subnet-golem' && (

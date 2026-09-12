@@ -5,6 +5,11 @@ export {
   DNS_SLIME_HOSTNAME,
   DNS_SLIME_SCENARIO,
 } from './dnsSlimeScenario'
+export {
+  GATEWAY_GOBLIN_CORRECT_GATEWAY,
+  GATEWAY_GOBLIN_EXTERNAL_IP,
+  GATEWAY_GOBLIN_SCENARIO,
+} from './gatewayGoblinScenario'
 export { loadScenario } from './loadScenario'
 export type { ScenarioLoadError, ScenarioLoadResult } from './loadScenario'
 export type {

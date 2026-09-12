@@ -24,6 +24,9 @@ describe('LAN Village', () => {
     expect(
       screen.getByRole('button', { name: /Subnet Golem/ }),
     ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /Gateway Goblin/ }),
+    ).toBeInTheDocument()
   })
 
   it('opens the NPC request by default', () => {
@@ -63,5 +66,20 @@ describe('LAN Village', () => {
 
     expect(golem).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText('このQuestは現在準備中です。')).toBeInTheDocument()
+  })
+
+  it('opens the Gateway Goblin request from its selected node', async () => {
+    const user = userEvent.setup()
+    renderVillage()
+
+    await user.click(screen.getByRole('button', { name: /Gateway Goblin/ }))
+
+    expect(
+      screen.getByRole('heading', { name: 'Gateway Goblin' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '依頼を確認' })).toHaveAttribute(
+      'href',
+      '/event/gateway-goblin',
+    )
   })
 })
