@@ -14,6 +14,15 @@ describe('DNS Slime scenario', () => {
         npcName: 'Net Sage',
         location: 'LAN Village',
       },
+      topology: {
+        mainPath: [
+          { name: 'PC' },
+          { name: 'Switch' },
+          { name: 'Router' },
+          { name: 'Internet' },
+        ],
+        dnsNode: { name: 'DNS' },
+      },
       enemy: { name: 'DNS Slime', maxHp: 100 },
       failure: { type: 'DNS_MISCONFIGURATION' },
       answer: { cause: 'DNS' },

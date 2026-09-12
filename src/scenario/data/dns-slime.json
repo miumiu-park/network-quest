@@ -6,6 +6,20 @@
     "location": "LAN Village",
     "symptom": "村の案内板 quest.example を開こうとしても、ページが見つからないと表示されるのじゃ。さっきまでは使えていたが、今は誰も接続できず困っておる。"
   },
+  "topology": {
+    "mainPath": [
+      { "id": "pc", "name": "PC", "detail": "192.168.1.10" },
+      { "id": "switch", "name": "Switch", "detail": "LAN / Layer 2" },
+      { "id": "router", "name": "Router", "detail": "192.168.1.1" },
+      { "id": "internet", "name": "Internet", "detail": "203.0.113.20" }
+    ],
+    "dnsNode": {
+      "id": "dns",
+      "name": "DNS",
+      "detail": "192.168.1.53"
+    },
+    "dnsConnectionLabel": "Switch → DNS query"
+  },
   "enemy": {
     "id": "dns-slime",
     "name": "DNS Slime",

@@ -36,6 +36,7 @@ import {
   Terminal,
   type TerminalExecutor,
 } from '../terminal'
+import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import styles from './DnsSlimeBattle.module.css'
 
@@ -179,7 +180,6 @@ export function DnsSlimeBattle() {
     })
   }
 
-  const dnsServer = networkState.dns.servers[0]
   const configuredDns = networkState.client.dnsServers.join(', ') || '未設定'
 
   return (
@@ -264,71 +264,13 @@ export function DnsSlimeBattle() {
             <p className={styles.paneNumber}>02</p>
             <h2>Network Diagram</h2>
           </div>
-          <div className={styles.topology}>
-            <article className={styles.networkNode}>
-              <span aria-hidden="true">💻</span>
-              <div>
-                <h3>Client</h3>
-                <code>{networkState.client.ipAddress}</code>
-              </div>
-              <small>
-                {networkState.client.linkUp ? 'LINK UP' : 'LINK DOWN'}
-              </small>
-            </article>
-
-            <div className={styles.connector} aria-hidden="true">
-              <span>LAN</span>
-            </div>
-
-            <div className={styles.networkPath}>
-              <p>Default route</p>
-              <article className={styles.networkNode}>
-                <span aria-hidden="true">📡</span>
-                <div>
-                  <h3>Gateway</h3>
-                  <code>{networkState.gateway.ipAddress}</code>
-                </div>
-                <small>
-                  {networkState.gateway.online ? 'ONLINE' : 'OFFLINE'}
-                </small>
-              </article>
-              <div className={styles.connector} aria-hidden="true">
-                <span>WAN</span>
-              </div>
-              <article className={styles.networkNode}>
-                <span aria-hidden="true">🌐</span>
-                <div>
-                  <h3>Internet</h3>
-                  <code>{DNS_SLIME_EXTERNAL_IP}</code>
-                </div>
-                <small>
-                  {networkState.internet.online ? 'ONLINE' : 'OFFLINE'}
-                </small>
-              </article>
-            </div>
-
-            <div className={styles.networkPath}>
-              <p>Resolver target</p>
-              <article className={styles.networkNode}>
-                <span aria-hidden="true">🗄️</span>
-                <div>
-                  <h3>DNS Server</h3>
-                  <code>{dnsServer?.ipAddress ?? '未設定'}</code>
-                </div>
-                <small>{dnsServer?.online ? 'ONLINE' : 'OFFLINE'}</small>
-              </article>
-            </div>
-          </div>
-          <dl className={styles.networkConfig}>
-            <div>
-              <dt>Client DNS</dt>
-              <dd>{configuredDns}</dd>
-            </div>
-            <div>
-              <dt>Subnet</dt>
-              <dd>{networkState.client.subnetMask}</dd>
-            </div>
-          </dl>
+          <NetworkDiagram
+            topology={DNS_SLIME_SCENARIO.topology}
+            details={[
+              { label: 'Client DNS', value: configuredDns },
+              { label: 'Subnet', value: networkState.client.subnetMask },
+            ]}
+          />
         </section>
 
         <section className={styles.terminalPane} aria-label="Terminal">
