@@ -4,6 +4,11 @@ import { validateScenario } from './validateScenario'
 const validScenario = {
   id: 'dns-slime',
   title: 'DNS Slimeの名前解決障害',
+  event: {
+    npcName: 'Net Sage',
+    location: 'LAN Village',
+    symptom: 'The village guide cannot open quest.example.',
+  },
   enemy: {
     id: 'dns-slime',
     name: 'DNS Slime',

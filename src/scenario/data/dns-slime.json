@@ -1,6 +1,11 @@
 {
   "id": "dns-slime",
   "title": "DNS Slimeの名前解決障害",
+  "event": {
+    "npcName": "Net Sage",
+    "location": "LAN Village",
+    "symptom": "村の案内板 quest.example を開こうとしても、ページが見つからないと表示されるのじゃ。さっきまでは使えていたが、今は誰も接続できず困っておる。"
+  },
   "enemy": {
     "id": "dns-slime",
     "name": "DNS Slime",

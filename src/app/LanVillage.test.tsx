@@ -26,31 +26,32 @@ describe('LAN Village', () => {
     ).toBeInTheDocument()
   })
 
-  it('opens the existing DNS Slime quest from the selected node', () => {
+  it('opens the NPC request by default', () => {
     renderVillage()
 
-    expect(screen.getByRole('button', { name: /DNS Slime/ })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: /Net Sage/ })).toHaveAttribute(
       'aria-pressed',
       'true',
     )
-    expect(
-      screen.getByRole('link', { name: 'DNS Slimeに挑戦' }),
-    ).toHaveAttribute('href', '/battle/dns-slime')
+    expect(screen.getByRole('link', { name: '症状を聞く' })).toHaveAttribute(
+      'href',
+      '/event/dns-slime',
+    )
   })
 
-  it('updates the detail panel when the NPC is selected', async () => {
+  it('routes the selected monster through its request before Battle', async () => {
     const user = userEvent.setup()
     renderVillage()
 
-    await user.click(screen.getByRole('button', { name: /Net Sage/ }))
+    await user.click(screen.getByRole('button', { name: /DNS Slime/ }))
 
     expect(
-      screen.getByRole('heading', { name: 'Net Sage' }),
+      screen.getByRole('heading', { name: 'DNS Slime' }),
     ).toBeInTheDocument()
-    expect(screen.getByText(/近い場所から順番に到達性/)).toBeInTheDocument()
-    expect(
-      screen.queryByRole('link', { name: 'DNS Slimeに挑戦' }),
-    ).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '依頼を確認' })).toHaveAttribute(
+      'href',
+      '/event/dns-slime',
+    )
   })
 
   it('keeps Subnet Golem selectable while marking its quest unavailable', async () => {

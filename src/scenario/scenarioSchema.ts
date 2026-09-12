@@ -6,6 +6,11 @@ const nonEmptyString = z.string().trim().min(1)
 export const scenarioSchema: z.ZodType<Scenario> = z.strictObject({
   id: nonEmptyString.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: nonEmptyString,
+  event: z.strictObject({
+    npcName: nonEmptyString,
+    location: nonEmptyString,
+    symptom: nonEmptyString,
+  }),
   enemy: z.strictObject({
     id: nonEmptyString,
     name: nonEmptyString,

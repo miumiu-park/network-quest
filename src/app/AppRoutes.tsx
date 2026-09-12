@@ -12,6 +12,7 @@ import { DNS_SLIME_SCENARIO } from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
+import { NpcEvent } from './NpcEvent'
 import { APP_ROUTES } from './routes'
 
 interface ScreenProps {
@@ -43,6 +44,25 @@ function BattleRoute() {
     <Screen title="Battle">
       <p>Scenario: {scenarioId}</p>
       <p>このScenarioは見つかりません。</p>
+      <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
+    </Screen>
+  )
+}
+
+function EventRoute() {
+  const { scenarioId } = useParams<'scenarioId'>()
+
+  if (scenarioId === undefined) {
+    return <Navigate to={APP_ROUTES.village} replace />
+  }
+
+  if (scenarioId === DNS_SLIME_SCENARIO.id) {
+    return <NpcEvent scenario={DNS_SLIME_SCENARIO} />
+  }
+
+  return (
+    <Screen title="NPC Event">
+      <p>この依頼は見つかりません。</p>
       <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
     </Screen>
   )
@@ -98,6 +118,7 @@ export function AppRoutes() {
         element={<Navigate to={APP_ROUTES.village} replace />}
       />
       <Route path={APP_ROUTES.village} element={<LanVillage />} />
+      <Route path={APP_ROUTES.event} element={<EventRoute />} />
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />
       <Route path={APP_ROUTES.result} element={<ResultRoute />} />
       <Route path={APP_ROUTES.learning} element={<LearningRoute />} />
