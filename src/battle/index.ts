@@ -4,9 +4,11 @@ export {
   recordDnsRepair,
   recordGatewayRepair,
   recordIpAddressRepair,
+  recordSubnetMaskRepair,
   verifyDnsRepair,
   verifyGatewayRepair,
   verifyIpAddressRepair,
+  verifySubnetMaskRepair,
 } from './repairVerification'
 export type {
   BattleEngine,
@@ -26,4 +28,5 @@ export type {
   DnsRepairVerificationResult,
   GatewayRepairVerificationResult,
   IpAddressRepairVerificationResult,
+  SubnetMaskRepairVerificationResult,
 } from './repairVerification'

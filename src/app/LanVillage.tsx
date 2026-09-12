@@ -4,6 +4,7 @@ import {
   DNS_SLIME_SCENARIO,
   GATEWAY_GOBLIN_SCENARIO,
   IP_SLIME_SCENARIO,
+  SUBNET_GOLEM_SCENARIO,
 } from '../scenario'
 import styles from './LanVillage.module.css'
 
@@ -38,8 +39,8 @@ const VILLAGE_ENTITIES = [
     name: 'Subnet Golem',
     role: 'Subnetting',
     icon: '🗿',
-    status: 'COMING SOON',
-    description: 'Subnetの境界を守るゴーレム。現在は準備中です。',
+    status: 'BOSS',
+    description: '複数端末の通信範囲を歪めるBoss。調査可能です。',
   },
   {
     id: 'gateway-goblin',
@@ -157,7 +158,12 @@ export function LanVillage() {
             </Link>
           )}
           {selected.id === 'subnet-golem' && (
-            <p className={styles.unavailable}>このQuestは現在準備中です。</p>
+            <Link
+              className={styles.primaryAction}
+              to={`/event/${SUBNET_GOLEM_SCENARIO.id}`}
+            >
+              Boss依頼を確認
+            </Link>
           )}
         </aside>
       </div>

@@ -3,6 +3,7 @@ export { createNetworkSimulator } from './networkSimulator'
 export { repairDnsConfiguration } from './dnsRepair'
 export { repairGatewayConfiguration } from './gatewayRepair'
 export { repairIpAddress } from './ipAddressRepair'
+export { repairSubnetMask } from './subnetMaskRepair'
 export { simulateNslookup } from './dnsSimulation'
 export { simulatePing } from './ipReachability'
 export { isIpv4Address, networkStateSchema } from './networkStateSchema'
@@ -30,8 +31,13 @@ export type {
   DnsServerNetworkState,
   GatewayNetworkState,
   InternetNetworkState,
+  LanPeerNetworkState,
   NetworkState,
 } from './networkState'
+export type {
+  SubnetMaskRepairErrorCode,
+  SubnetMaskRepairResult,
+} from './subnetMaskRepair'
 export type {
   ClientInterfaceInfo,
   NetworkSimulationRules,

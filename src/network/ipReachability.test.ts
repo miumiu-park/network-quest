@@ -28,6 +28,34 @@ const baseState: NetworkState = {
 }
 
 describe('simulatePing', () => {
+  it('uses both client and peer masks for LAN peer reachability', () => {
+    const state: NetworkState = {
+      ...baseState,
+      client: { ...baseState.client, subnetMask: '255.255.255.128' },
+      lanPeers: [
+        {
+          name: 'Workshop A',
+          ipAddress: '192.168.1.20',
+          subnetMask: '255.255.255.0',
+          online: true,
+        },
+        {
+          name: 'Workshop B',
+          ipAddress: '192.168.1.130',
+          subnetMask: '255.255.255.0',
+          online: true,
+        },
+      ],
+    }
+
+    expect(simulatePing(state, '192.168.1.20')).toMatchObject({
+      reachable: true,
+    })
+    expect(simulatePing(state, '192.168.1.130')).toEqual({
+      reachable: false,
+      reason: 'UNREACHABLE',
+    })
+  })
   it.each(['client', '192.168.1.10'])(
     'reaches the client through target %s when its link is up',
     (target) => {

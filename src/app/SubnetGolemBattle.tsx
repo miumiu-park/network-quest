@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   applyInvestigationObservations,
   CAUSE_ANSWER_OPTIONS,
   createBattleEngine,
-  recordDnsRepair,
-  verifyDnsRepair,
+  recordSubnetMaskRepair,
+  verifySubnetMaskRepair,
   type CauseAnswer,
 } from '../battle'
 import {
@@ -16,16 +16,15 @@ import { createLearningReview } from '../learning'
 import {
   createNetworkSimulator,
   createNetworkState,
-  repairDnsConfiguration,
+  repairSubnetMask,
   simulateNslookup,
   simulatePing,
   type NetworkState,
 } from '../network'
 import {
-  DNS_SLIME_CORRECT_DNS,
-  DNS_SLIME_EXTERNAL_IP,
-  DNS_SLIME_HOSTNAME,
-  DNS_SLIME_SCENARIO,
+  SUBNET_GOLEM_CORRECT_MASK,
+  SUBNET_GOLEM_PEER_ADDRESSES,
+  SUBNET_GOLEM_SCENARIO,
 } from '../scenario'
 import {
   createCommandExecutor,
@@ -37,21 +36,21 @@ import {
   type TerminalExecutor,
 } from '../terminal'
 import { BattleEffects } from './BattleEffects'
+import styles from './DnsSlimeBattle.module.css'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
-import styles from './DnsSlimeBattle.module.css'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
-  (cause) => cause === DNS_SLIME_SCENARIO.answer.cause,
+  (cause) => cause === SUBNET_GOLEM_SCENARIO.answer.cause,
 )
 
 if (scenarioCause === undefined) {
-  throw new Error('DNS Slime cause is not supported by Battle Engine')
+  throw new Error('Subnet Golem cause is not supported by Battle Engine')
 }
 
 const battleEngine = createBattleEngine({
-  enemyMaxHp: DNS_SLIME_SCENARIO.enemy.maxHp,
-  effectiveInvestigationDamage: 30,
+  enemyMaxHp: SUBNET_GOLEM_SCENARIO.enemy.maxHp,
+  effectiveInvestigationDamage: 35,
   correctCause: scenarioCause,
 })
 
@@ -64,34 +63,32 @@ const causeLabels: Readonly<Record<CauseAnswer, string>> = {
 }
 
 function createInitialNetworkState(): NetworkState {
-  const result = createNetworkState(DNS_SLIME_SCENARIO)
-
+  const result = createNetworkState(SUBNET_GOLEM_SCENARIO)
   if (!result.success) {
-    throw new Error('DNS Slime network state failed validation')
+    throw new Error('Subnet Golem network state failed validation')
   }
-
   return result.state
 }
 
-function isEffectiveDnsSlimeObservation(
-  observation: InvestigationObservation,
-): boolean {
+function isPeerObservation(observation: InvestigationObservation): boolean {
   return (
-    (observation.kind === 'GATEWAY_REACHABILITY' && observation.reachable) ||
-    (observation.kind === 'INTERNET_REACHABILITY' && observation.reachable) ||
-    (observation.kind === 'DNS_RESOLUTION' && !observation.resolved)
+    'target' in observation &&
+    SUBNET_GOLEM_PEER_ADDRESSES.some(
+      (address) => address === observation.target,
+    )
   )
 }
 
-export function DnsSlimeBattle() {
+export function SubnetGolemBattle() {
   const navigate = useNavigate()
   const [networkState, setNetworkState] = useState(createInitialNetworkState)
   const [battleState, setBattleState] = useState(
     battleEngine.createInitialState,
   )
   const [history] = useState(() => createInvestigationHistory())
+  const verifiedTargets = useRef(new Set<string>())
   const [message, setMessage] = useState(
-    'Terminalでgateway、外部IP、DNSの順に調査してください。',
+    'interface設定を確認し、2台のLAN端末への到達性を比較してください。',
   )
 
   const execute = useMemo<TerminalExecutor>(() => {
@@ -119,19 +116,29 @@ export function DnsSlimeBattle() {
             battleEngine,
             currentState,
             entry.observations,
-            isEffectiveDnsSlimeObservation,
+            isPeerObservation,
           )
+          const target = command.args[0]
 
           if (
-            command.command === 'nslookup' &&
-            command.args[0] === DNS_SLIME_HOSTNAME &&
-            investigatedState.repairStatus === 'REPAIRED'
+            command.command === 'ping' &&
+            target !== undefined &&
+            SUBNET_GOLEM_PEER_ADDRESSES.some((address) => address === target) &&
+            investigatedState.repairStatus === 'REPAIRED' &&
+            result.kind === 'output'
           ) {
-            return verifyDnsRepair(
+            verifiedTargets.current.add(target)
+          }
+
+          if (
+            investigatedState.repairStatus === 'REPAIRED' &&
+            verifiedTargets.current.size === SUBNET_GOLEM_PEER_ADDRESSES.length
+          ) {
+            return verifySubnetMaskRepair(
               battleEngine,
               investigatedState,
               networkState,
-              DNS_SLIME_HOSTNAME,
+              SUBNET_GOLEM_PEER_ADDRESSES,
             ).state
           }
 
@@ -149,56 +156,61 @@ export function DnsSlimeBattle() {
     )
     setMessage(
       answer === scenarioCause
-        ? '正解です。DNS設定を修復してください。'
-        : `${causeLabels[answer]}ではありません。調査結果を見直してください。`,
+        ? '正解です。管理端末のSubnet Maskを修復してください。'
+        : `${causeLabels[answer]}ではありません。端末ごとの到達範囲を比較してください。`,
     )
   }
 
-  function repairDns() {
-    const repair = repairDnsConfiguration(networkState, DNS_SLIME_CORRECT_DNS)
+  function repairMask() {
+    const repair = repairSubnetMask(networkState, SUBNET_GOLEM_CORRECT_MASK)
 
     if (!repair.success) {
-      setMessage('DNS設定を修復できませんでした。')
+      setMessage('Subnet Maskを修復できませんでした。')
       return
     }
 
+    verifiedTargets.current.clear()
     setNetworkState(repair.state)
     setBattleState((currentState) =>
-      recordDnsRepair(battleEngine, currentState, repair),
+      recordSubnetMaskRepair(battleEngine, currentState, repair),
     )
     setMessage(
-      `DNSを${DNS_SLIME_CORRECT_DNS}へ修復しました。nslookup ${DNS_SLIME_HOSTNAME}で再確認してください。`,
+      `Subnet Maskを${SUBNET_GOLEM_CORRECT_MASK}へ修復しました。2台へのpingを再実行してください。`,
     )
   }
 
   function showResult() {
     navigate(APP_ROUTES.result, {
       state: {
+        resultSummary: {
+          enemyName: SUBNET_GOLEM_SCENARIO.enemy.name,
+          exp: SUBNET_GOLEM_SCENARIO.reward.exp,
+        },
         learningReview: createLearningReview(
-          DNS_SLIME_SCENARIO,
+          SUBNET_GOLEM_SCENARIO,
           history.getEntries(),
         ),
       },
     })
   }
 
-  const configuredDns = networkState.client.dnsServers.join(', ') || '未設定'
-
   return (
     <main id="center" className={styles.screen}>
       <header className={styles.heading}>
         <div>
-          <p className={styles.eyebrow}>Scenario: {DNS_SLIME_SCENARIO.id}</p>
+          <p className={styles.eyebrow}>
+            Boss Scenario: {SUBNET_GOLEM_SCENARIO.id}
+          </p>
           <h1>Battle</h1>
         </div>
-        <p className={styles.scenarioTitle}>{DNS_SLIME_SCENARIO.title}</p>
+        <p className={styles.scenarioTitle}>{SUBNET_GOLEM_SCENARIO.title}</p>
       </header>
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">
           <div className={styles.paneHeader}>
             <p className={styles.paneNumber}>01</p>
-            <h2>Enemy</h2>
+            <h2>Boss Enemy</h2>
           </div>
           <div
             className={`${styles.enemyPortrait} ${
@@ -207,24 +219,21 @@ export function DnsSlimeBattle() {
             key={`enemy-${battleState.totalDamage}`}
             aria-hidden="true"
           >
-            🦠
+            🗿
           </div>
-          <h3>{DNS_SLIME_SCENARIO.enemy.name}</h3>
+          <h3>{SUBNET_GOLEM_SCENARIO.enemy.name}</h3>
           <div className={styles.hpHeader}>
             <span>HP</span>
             <strong>
-              {battleState.enemyHp} / {DNS_SLIME_SCENARIO.enemy.maxHp}
+              {battleState.enemyHp} / {SUBNET_GOLEM_SCENARIO.enemy.maxHp}
             </strong>
           </div>
           <progress
             className={styles.hpBar}
             aria-label="Enemy HP"
             value={battleState.enemyHp}
-            max={DNS_SLIME_SCENARIO.enemy.maxHp}
-          >
-            {battleState.enemyHp}
-          </progress>
-
+            max={SUBNET_GOLEM_SCENARIO.enemy.maxHp}
+          />
           <dl className={styles.statusList} aria-label="Battle status">
             <div>
               <dt>Diagnosis</dt>
@@ -235,11 +244,9 @@ export function DnsSlimeBattle() {
               <dd>{battleState.repairStatus}</dd>
             </div>
           </dl>
-
           <p className={styles.message} aria-live="polite">
             {message}
           </p>
-
           <div className={styles.actions} aria-label="原因回答と修復">
             <h3>原因を回答</h3>
             <div className={styles.buttons}>
@@ -256,13 +263,13 @@ export function DnsSlimeBattle() {
             </div>
             <button
               type="button"
-              onClick={repairDns}
+              onClick={repairMask}
               disabled={
                 battleState.diagnosisStatus !== 'CORRECT' ||
                 battleState.repairStatus === 'REPAIRED'
               }
             >
-              DNS設定を修復
+              Subnet Maskを修復
             </button>
           </div>
         </section>
@@ -273,10 +280,12 @@ export function DnsSlimeBattle() {
             <h2>Network Diagram</h2>
           </div>
           <NetworkDiagram
-            topology={DNS_SLIME_SCENARIO.topology}
+            topology={SUBNET_GOLEM_SCENARIO.topology}
             details={[
-              { label: 'Client DNS', value: configuredDns },
-              { label: 'Subnet', value: networkState.client.subnetMask },
+              { label: 'Admin PC', value: networkState.client.ipAddress },
+              { label: 'Subnet Mask', value: networkState.client.subnetMask },
+              { label: 'Terminal A', value: SUBNET_GOLEM_PEER_ADDRESSES[0] },
+              { label: 'Terminal B', value: SUBNET_GOLEM_PEER_ADDRESSES[1] },
             ]}
           />
         </section>
@@ -288,9 +297,9 @@ export function DnsSlimeBattle() {
           </div>
           <div className={styles.guide} aria-label="調査ガイド">
             <p>Suggested commands</p>
-            <code>ping gateway</code>
-            <code>ping {DNS_SLIME_EXTERNAL_IP}</code>
-            <code>nslookup {DNS_SLIME_HOSTNAME}</code>
+            <code>ip</code>
+            <code>ping {SUBNET_GOLEM_PEER_ADDRESSES[0]}</code>
+            <code>ping {SUBNET_GOLEM_PEER_ADDRESSES[1]}</code>
           </div>
           <Terminal execute={execute} />
         </section>
@@ -298,7 +307,7 @@ export function DnsSlimeBattle() {
 
       {battleState.status === 'CLEARED' && (
         <section className={styles.clear} aria-label="Stage Clear">
-          <h2>DNS Slime 撃破！</h2>
+          <h2>Subnet Golem 撃破！</h2>
           <p>Stage Clear</p>
           <button type="button" onClick={showResult}>
             Resultへ

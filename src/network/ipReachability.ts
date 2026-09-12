@@ -32,6 +32,25 @@ export function simulatePing(
       : unreachable()
   }
 
+  const lanPeer = state.lanPeers?.find((peer) => peer.ipAddress === address)
+
+  if (lanPeer !== undefined) {
+    return state.client.linkUp &&
+      lanPeer.online &&
+      isSameSubnet(
+        state.client.ipAddress,
+        lanPeer.ipAddress,
+        state.client.subnetMask,
+      ) &&
+      isSameSubnet(
+        lanPeer.ipAddress,
+        state.client.ipAddress,
+        lanPeer.subnetMask,
+      )
+      ? reachable(address, GATEWAY_ROUND_TRIP_TIME_MS)
+      : unreachable()
+  }
+
   const isKnownInternetAddress =
     state.internet.reachableAddresses.includes(address)
   const hasWorkingDefaultRoute =

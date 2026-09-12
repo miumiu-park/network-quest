@@ -55,6 +55,7 @@ const causeLabels: Readonly<Record<CauseAnswer, string>> = {
   GATEWAY: 'Gateway',
   DNS: 'DNS',
   FIREWALL: 'Firewall',
+  SUBNET_MASK: 'Subnet Mask',
 }
 
 function createInitialNetworkState(): NetworkState {

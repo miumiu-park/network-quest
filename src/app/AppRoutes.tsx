@@ -12,10 +12,12 @@ import {
   DNS_SLIME_SCENARIO,
   GATEWAY_GOBLIN_SCENARIO,
   IP_SLIME_SCENARIO,
+  SUBNET_GOLEM_SCENARIO,
 } from '../scenario'
 import { DnsSlimeBattle } from './DnsSlimeBattle'
 import { GatewayGoblinBattle } from './GatewayGoblinBattle'
 import { IpSlimeBattle } from './IpSlimeBattle'
+import { SubnetGolemBattle } from './SubnetGolemBattle'
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
@@ -54,6 +56,10 @@ function BattleRoute() {
     return <IpSlimeBattle />
   }
 
+  if (scenarioId === SUBNET_GOLEM_SCENARIO.id) {
+    return <SubnetGolemBattle />
+  }
+
   return (
     <Screen title="Battle">
       <p>Scenario: {scenarioId}</p>
@@ -80,6 +86,10 @@ function EventRoute() {
 
   if (scenarioId === IP_SLIME_SCENARIO.id) {
     return <NpcEvent scenario={IP_SLIME_SCENARIO} />
+  }
+
+  if (scenarioId === SUBNET_GOLEM_SCENARIO.id) {
+    return <NpcEvent scenario={SUBNET_GOLEM_SCENARIO} />
   }
 
   return (
