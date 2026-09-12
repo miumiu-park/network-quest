@@ -2,6 +2,7 @@ export { createNetworkState } from './createNetworkState'
 export { createNetworkSimulator } from './networkSimulator'
 export { repairDnsConfiguration } from './dnsRepair'
 export { repairGatewayConfiguration } from './gatewayRepair'
+export { repairIpAddress } from './ipAddressRepair'
 export { simulateNslookup } from './dnsSimulation'
 export { simulatePing } from './ipReachability'
 export { isIpv4Address, networkStateSchema } from './networkStateSchema'
@@ -14,6 +15,10 @@ export type {
   GatewayRepairErrorCode,
   GatewayRepairResult,
 } from './gatewayRepair'
+export type {
+  IpAddressRepairErrorCode,
+  IpAddressRepairResult,
+} from './ipAddressRepair'
 export type {
   NetworkStateCreationResult,
   NetworkStateValidationError,

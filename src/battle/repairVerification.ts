@@ -3,6 +3,7 @@ import {
   simulateNslookup,
   type DnsRepairResult,
   type GatewayRepairResult,
+  type IpAddressRepairResult,
   type NetworkState,
   type NslookupSimulationResult,
 } from '../network'
@@ -14,6 +15,11 @@ export interface DnsRepairVerificationResult {
 }
 
 export interface GatewayRepairVerificationResult {
+  readonly state: BattleEngineState
+  readonly ping: ReturnType<typeof simulatePing>
+}
+
+export interface IpAddressRepairVerificationResult {
   readonly state: BattleEngineState
   readonly ping: ReturnType<typeof simulatePing>
 }
@@ -55,6 +61,27 @@ export function verifyGatewayRepair(
   target: string,
 ): GatewayRepairVerificationResult {
   const ping = simulatePing(networkState, target)
+
+  return Object.freeze({
+    state: engine.verifyRepair(state, ping.reachable),
+    ping: Object.freeze({ ...ping }),
+  })
+}
+
+export function recordIpAddressRepair(
+  engine: Pick<BattleEngine, 'recordRepair'>,
+  state: BattleEngineState,
+  repair: IpAddressRepairResult,
+): BattleEngineState {
+  return repair.success && repair.changed ? engine.recordRepair(state) : state
+}
+
+export function verifyIpAddressRepair(
+  engine: Pick<BattleEngine, 'verifyRepair'>,
+  state: BattleEngineState,
+  networkState: NetworkState,
+): IpAddressRepairVerificationResult {
+  const ping = simulatePing(networkState, 'gateway')
 
   return Object.freeze({
     state: engine.verifyRepair(state, ping.reachable),
