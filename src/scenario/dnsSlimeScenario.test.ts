@@ -10,6 +10,10 @@ describe('DNS Slime scenario', () => {
   it('loads the bundled JSON through Scenario validation', () => {
     expect(DNS_SLIME_SCENARIO).toMatchObject({
       id: 'dns-slime',
+      event: {
+        npcName: 'Net Sage',
+        location: 'LAN Village',
+      },
       enemy: { name: 'DNS Slime', maxHp: 100 },
       failure: { type: 'DNS_MISCONFIGURATION' },
       answer: { cause: 'DNS' },

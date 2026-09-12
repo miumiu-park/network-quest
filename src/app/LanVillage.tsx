@@ -18,7 +18,8 @@ const VILLAGE_ENTITIES = [
     role: 'Village Guide',
     icon: '🧙',
     status: 'TALK',
-    description: '困ったときは、近い場所から順番に到達性を確認するのじゃ。',
+    description:
+      'Villageで起きている異変について、相談したいことがあるようです。',
   },
   {
     id: 'dns-slime',
@@ -41,7 +42,7 @@ const VILLAGE_ENTITIES = [
 type VillageEntityId = (typeof VILLAGE_ENTITIES)[number]['id']
 
 export function LanVillage() {
-  const [selectedId, setSelectedId] = useState<VillageEntityId>('dns-slime')
+  const [selectedId, setSelectedId] = useState<VillageEntityId>('npc')
   const selected =
     VILLAGE_ENTITIES.find((entity) => entity.id === selectedId) ??
     VILLAGE_ENTITIES[0]
@@ -111,12 +112,12 @@ export function LanVillage() {
             </div>
           </dl>
 
-          {selected.id === 'dns-slime' && (
+          {(selected.id === 'npc' || selected.id === 'dns-slime') && (
             <Link
               className={styles.primaryAction}
-              to={`/battle/${DNS_SLIME_SCENARIO.id}`}
+              to={`/event/${DNS_SLIME_SCENARIO.id}`}
             >
-              DNS Slimeに挑戦
+              {selected.id === 'npc' ? '症状を聞く' : '依頼を確認'}
             </Link>
           )}
           {selected.id === 'subnet-golem' && (

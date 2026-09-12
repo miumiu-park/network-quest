@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import App from './App'
@@ -17,6 +18,7 @@ describe('App routing', () => {
     expect(APP_ROUTES).toEqual({
       home: '/',
       village: '/village',
+      event: '/event/:scenarioId',
       battle: '/battle/:scenarioId',
       result: '/result',
       learning: '/learning',
@@ -33,6 +35,7 @@ describe('App routing', () => {
 
   it.each([
     ['/village', 'LAN Village'],
+    ['/event/dns-slime', 'NPC Event'],
     ['/result', 'Result'],
     ['/learning', 'Learning'],
   ])('renders %s as the %s screen', (route, heading) => {
@@ -48,5 +51,15 @@ describe('App routing', () => {
     expect(screen.getByText('Scenario: dns-slime')).toBeInTheDocument()
     expect(screen.queryByText('CLEARED')).not.toBeInTheDocument()
     expect(screen.queryByText('0')).not.toBeInTheDocument()
+  })
+
+  it('starts the Battle from the NPC Event', async () => {
+    const user = userEvent.setup()
+    renderRoute('/event/dns-slime')
+
+    await user.click(screen.getByRole('link', { name: '調査を開始' }))
+
+    expect(screen.getByRole('heading', { name: 'Battle' })).toBeInTheDocument()
+    expect(screen.getByText('Scenario: dns-slime')).toBeInTheDocument()
   })
 })

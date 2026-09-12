@@ -14,6 +14,12 @@ export interface ScenarioEnemy {
   readonly maxHp: number
 }
 
+export interface ScenarioEvent {
+  readonly npcName: string
+  readonly location: string
+  readonly symptom: string
+}
+
 export type ScenarioNetwork = Readonly<Record<string, JsonValue>>
 
 export interface ScenarioFailure {
@@ -37,6 +43,7 @@ export interface ScenarioLearning {
 export interface Scenario {
   readonly id: ScenarioId
   readonly title: string
+  readonly event: ScenarioEvent
   readonly enemy: ScenarioEnemy
   readonly network: ScenarioNetwork
   readonly failure: ScenarioFailure

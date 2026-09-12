@@ -4,6 +4,11 @@ import type { Scenario } from './scenario'
 const scenario = {
   id: 'dns-slime',
   title: 'DNS Slimeの名前解決障害',
+  event: {
+    npcName: 'Net Sage',
+    location: 'LAN Village',
+    symptom: 'The village guide cannot open quest.example.',
+  },
   enemy: {
     id: 'dns-slime',
     name: 'DNS Slime',
@@ -34,6 +39,7 @@ describe('Scenario', () => {
     expect(Object.keys(scenario)).toEqual([
       'id',
       'title',
+      'event',
       'enemy',
       'network',
       'failure',
