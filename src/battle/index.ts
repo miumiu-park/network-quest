@@ -3,8 +3,10 @@ export { applyInvestigationObservations } from './investigationDamage'
 export {
   recordDnsRepair,
   recordGatewayRepair,
+  recordIpAddressRepair,
   verifyDnsRepair,
   verifyGatewayRepair,
+  verifyIpAddressRepair,
 } from './repairVerification'
 export type {
   BattleEngine,
@@ -23,4 +25,5 @@ export type { ObservationEffectivenessEvaluator } from './investigationDamage'
 export type {
   DnsRepairVerificationResult,
   GatewayRepairVerificationResult,
+  IpAddressRepairVerificationResult,
 } from './repairVerification'

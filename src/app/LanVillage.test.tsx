@@ -27,6 +27,7 @@ describe('LAN Village', () => {
     expect(
       screen.getByRole('button', { name: /Gateway Goblin/ }),
     ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /IP Slime/ })).toBeInTheDocument()
   })
 
   it('opens the NPC request by default', () => {
@@ -80,6 +81,21 @@ describe('LAN Village', () => {
     expect(screen.getByRole('link', { name: '依頼を確認' })).toHaveAttribute(
       'href',
       '/event/gateway-goblin',
+    )
+  })
+
+  it('opens the IP Slime request from its selected node', async () => {
+    const user = userEvent.setup()
+    renderVillage()
+
+    await user.click(screen.getByRole('button', { name: /IP Slime/ }))
+
+    expect(
+      screen.getByRole('heading', { name: 'IP Slime' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '依頼を確認' })).toHaveAttribute(
+      'href',
+      '/event/ip-slime',
     )
   })
 })
