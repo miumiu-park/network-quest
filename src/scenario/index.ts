@@ -17,6 +17,8 @@ export type {
   ScenarioLearning,
   ScenarioNetwork,
   ScenarioReward,
+  ScenarioTopology,
+  ScenarioTopologyNode,
 } from './scenario'
 export { validateScenario } from './validateScenario'
 export type {

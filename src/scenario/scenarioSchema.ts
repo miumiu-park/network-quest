@@ -2,6 +2,11 @@ import { z } from 'zod'
 import type { Scenario } from './scenario'
 
 const nonEmptyString = z.string().trim().min(1)
+const topologyNodeSchema = z.strictObject({
+  id: nonEmptyString,
+  name: nonEmptyString,
+  detail: nonEmptyString,
+})
 
 export const scenarioSchema: z.ZodType<Scenario> = z.strictObject({
   id: nonEmptyString.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -10,6 +15,11 @@ export const scenarioSchema: z.ZodType<Scenario> = z.strictObject({
     npcName: nonEmptyString,
     location: nonEmptyString,
     symptom: nonEmptyString,
+  }),
+  topology: z.strictObject({
+    mainPath: z.array(topologyNodeSchema).min(2),
+    dnsNode: topologyNodeSchema,
+    dnsConnectionLabel: nonEmptyString,
   }),
   enemy: z.strictObject({
     id: nonEmptyString,

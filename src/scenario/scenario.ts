@@ -20,6 +20,18 @@ export interface ScenarioEvent {
   readonly symptom: string
 }
 
+export interface ScenarioTopologyNode {
+  readonly id: string
+  readonly name: string
+  readonly detail: string
+}
+
+export interface ScenarioTopology {
+  readonly mainPath: readonly ScenarioTopologyNode[]
+  readonly dnsNode: ScenarioTopologyNode
+  readonly dnsConnectionLabel: string
+}
+
 export type ScenarioNetwork = Readonly<Record<string, JsonValue>>
 
 export interface ScenarioFailure {
@@ -44,6 +56,7 @@ export interface Scenario {
   readonly id: ScenarioId
   readonly title: string
   readonly event: ScenarioEvent
+  readonly topology: ScenarioTopology
   readonly enemy: ScenarioEnemy
   readonly network: ScenarioNetwork
   readonly failure: ScenarioFailure
