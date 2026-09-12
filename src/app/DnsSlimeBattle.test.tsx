@@ -5,6 +5,25 @@ import { describe, expect, it } from 'vitest'
 import App from '../App'
 
 describe('DNS Slime playable scenario', () => {
+  it('separates Enemy, Network Diagram and Terminal into operable panes', () => {
+    render(
+      <MemoryRouter initialEntries={['/battle/dns-slime']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('region', { name: 'Enemy' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: 'Network Diagram' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Terminal' })).toBeInTheDocument()
+    expect(screen.getByText('Client DNS').nextElementSibling).toHaveTextContent(
+      '192.168.1.99',
+    )
+    expect(screen.getByRole('textbox', { name: 'コマンド' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'DNS' })).toBeEnabled()
+  })
+
   it('plays through investigation, repair, verification, Result and Learning', async () => {
     const user = userEvent.setup()
     render(
@@ -27,7 +46,10 @@ describe('DNS Slime playable scenario', () => {
     expect(screen.getByText(/正解です/)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'DNS設定を修復' }))
-    expect(screen.getByText('Repair: REPAIRED')).toBeInTheDocument()
+    expect(screen.getByText('REPAIRED')).toBeInTheDocument()
+    expect(screen.getByText('Client DNS').nextElementSibling).toHaveTextContent(
+      '192.168.1.53',
+    )
     expect(screen.queryByText('Stage Clear')).not.toBeInTheDocument()
 
     await user.type(terminal, 'nslookup quest.example{enter}')

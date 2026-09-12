@@ -1,68 +1,214 @@
 .screen {
-  width: min(100%, 920px);
-  padding: 32px;
   box-sizing: border-box;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 50% 0, var(--accent-bg), transparent 24%),
+    var(--bg);
+  text-align: left;
 }
 
 .heading {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
 }
 
 .heading h1 {
+  margin: 2px 0 0;
+}
+
+.eyebrow,
+.paneNumber {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scenarioTitle {
+  margin-bottom: 9px;
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+.battleGrid {
+  display: grid;
+  grid-template-areas: 'enemy network terminal';
+  grid-template-columns: minmax(220px, 0.8fr) minmax(250px, 0.9fr) minmax(
+      400px,
+      1.45fr
+    );
+  gap: 14px;
+  align-items: start;
+  width: 100%;
+}
+
+.enemyPane,
+.networkPane,
+.terminalPane,
+.clear {
+  box-sizing: border-box;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--social-bg);
+  box-shadow: var(--shadow);
+}
+
+.enemyPane {
+  grid-area: enemy;
+  padding: 18px;
+}
+
+.networkPane {
+  grid-area: network;
+  padding: 18px;
+}
+
+.terminalPane {
+  display: grid;
+  grid-area: terminal;
+  gap: 14px;
+  padding: 18px;
+}
+
+.paneHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.paneHeader h2,
+.paneHeader p {
   margin: 0;
 }
 
-.eyebrow {
-  color: var(--accent);
-  font-family: var(--mono);
+.paneNumber {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-bg);
 }
 
-.status,
-.guide,
-.actions,
-.clear {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-  border: 1px solid var(--border);
+.enemyPortrait {
+  display: grid;
+  min-height: 122px;
+  place-items: center;
+  border: 1px dashed var(--accent-border);
   border-radius: 12px;
-  background: var(--code-bg);
+  background:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px), var(--code-bg);
+  background-size: 22px 22px;
+  font-size: 3.8rem;
 }
 
-.status,
-.guide,
-.buttons {
+.enemyPane > h3 {
+  margin: 14px 0;
+  color: var(--text-h);
+  font-size: 1.08rem;
+  text-align: center;
+}
+
+.hpHeader {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
+  justify-content: space-between;
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.hpBar {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  accent-color: var(--accent);
+}
+
+.statusList,
+.networkConfig {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.statusList div,
+.networkConfig div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.statusList dt,
+.networkConfig dt {
+  color: var(--text);
+  font-size: 0.72rem;
+}
+
+.statusList dd,
+.networkConfig dd {
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-align: right;
 }
 
 .message {
-  min-height: 1.5em;
+  min-height: 3.8em;
+  border-radius: 8px;
+  background: var(--code-bg);
+  padding: 10px;
   color: var(--text-h);
-}
-
-.guide h2,
-.actions h2 {
-  flex-basis: 100%;
+  font-size: 0.75rem;
 }
 
 .actions {
   display: grid;
-  gap: 16px;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.actions h3 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 0.82rem;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
 }
 
 .buttons button,
 .actions > button,
 .clear button {
-  padding: 10px 16px;
   border: 1px solid var(--accent-border);
-  border-radius: 8px;
-  color: var(--text-h);
+  border-radius: 7px;
   background: var(--accent-bg);
+  padding: 8px;
+  color: var(--text-h);
   cursor: pointer;
+  font: 700 0.68rem/1.2 var(--mono);
 }
 
 .buttons button:disabled,
@@ -71,6 +217,138 @@
   opacity: 0.45;
 }
 
+.topology {
+  display: grid;
+  gap: 8px;
+}
+
+.networkPath {
+  display: grid;
+  gap: 0;
+  border-left: 2px solid var(--accent-border);
+  padding-left: 9px;
+}
+
+.networkPath > p {
+  margin-bottom: 6px;
+  color: var(--text);
+  font: 700 0.58rem/1.4 var(--mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.networkNode {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 3px 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  padding: 10px;
+}
+
+.networkNode > span {
+  grid-row: 1 / 3;
+  font-size: 1.35rem;
+}
+
+.networkNode h3 {
+  margin: 0 0 2px;
+  color: var(--text-h);
+  font-size: 0.78rem;
+}
+
+.networkNode code {
+  padding: 0;
+  background: transparent;
+  font-size: 0.66rem;
+}
+
+.networkNode small {
+  grid-column: 1 / -1;
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  padding: 2px 7px;
+  color: var(--accent);
+  font: 700 0.58rem/1.4 var(--mono);
+}
+
+.connector {
+  display: grid;
+  min-height: 26px;
+  place-items: center;
+  color: var(--text);
+  font: 0.58rem/1 var(--mono);
+  text-transform: uppercase;
+}
+
+.connector::before {
+  width: 1px;
+  height: 8px;
+  background: var(--accent-border);
+  content: '';
+}
+
+.guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  border-radius: 9px;
+  background: var(--code-bg);
+  padding: 11px;
+}
+
+.guide p {
+  flex-basis: 100%;
+  color: var(--text);
+  font: 700 0.66rem/1.4 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guide code {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 0.66rem;
+}
+
 .clear {
+  width: 100%;
   border-color: var(--accent);
+  padding: 20px;
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .battleGrid {
+    grid-template-areas:
+      'enemy network'
+      'terminal terminal';
+    grid-template-columns: minmax(240px, 0.8fr) minmax(300px, 1.2fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .screen {
+    padding: 20px 14px;
+  }
+
+  .heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .battleGrid {
+    grid-template-areas:
+      'enemy'
+      'network'
+      'terminal';
+    grid-template-columns: 1fr;
+  }
+
+  .buttons {
+    grid-template-columns: 1fr;
+  }
 }
