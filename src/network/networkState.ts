@@ -26,9 +26,17 @@ export interface InternetNetworkState {
   readonly reachableAddresses: readonly string[]
 }
 
+export interface LanPeerNetworkState {
+  readonly name: string
+  readonly ipAddress: string
+  readonly subnetMask: string
+  readonly online: boolean
+}
+
 export interface NetworkState {
   readonly client: ClientNetworkState
   readonly gateway: GatewayNetworkState
   readonly dns: DnsNetworkState
   readonly internet: InternetNetworkState
+  readonly lanPeers?: readonly LanPeerNetworkState[]
 }

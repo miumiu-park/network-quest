@@ -7,6 +7,7 @@ export const CAUSE_ANSWER_OPTIONS = [
   'GATEWAY',
   'DNS',
   'FIREWALL',
+  'SUBNET_MASK',
 ] as const
 
 export type CauseAnswer = (typeof CAUSE_ANSWER_OPTIONS)[number]

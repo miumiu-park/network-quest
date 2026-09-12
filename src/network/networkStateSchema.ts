@@ -34,6 +34,16 @@ export const networkStateSchema: z.ZodType<NetworkState> = z.strictObject({
     online: z.boolean(),
     reachableAddresses: z.array(ipv4Address),
   }),
+  lanPeers: z
+    .array(
+      z.strictObject({
+        name: z.string().trim().min(1),
+        ipAddress: ipv4Address,
+        subnetMask: ipv4Address,
+        online: z.boolean(),
+      }),
+    )
+    .optional(),
 })
 
 export function isIpv4Address(value: string): boolean {

@@ -4,6 +4,7 @@ import {
   type DnsRepairResult,
   type GatewayRepairResult,
   type IpAddressRepairResult,
+  type SubnetMaskRepairResult,
   type NetworkState,
   type NslookupSimulationResult,
 } from '../network'
@@ -22,6 +23,11 @@ export interface GatewayRepairVerificationResult {
 export interface IpAddressRepairVerificationResult {
   readonly state: BattleEngineState
   readonly ping: ReturnType<typeof simulatePing>
+}
+
+export interface SubnetMaskRepairVerificationResult {
+  readonly state: BattleEngineState
+  readonly pings: readonly ReturnType<typeof simulatePing>[]
 }
 
 export function recordDnsRepair(
@@ -86,5 +92,34 @@ export function verifyIpAddressRepair(
   return Object.freeze({
     state: engine.verifyRepair(state, ping.reachable),
     ping: Object.freeze({ ...ping }),
+  })
+}
+
+export function recordSubnetMaskRepair(
+  engine: Pick<BattleEngine, 'recordRepair'>,
+  state: BattleEngineState,
+  repair: SubnetMaskRepairResult,
+): BattleEngineState {
+  return repair.success && repair.changed ? engine.recordRepair(state) : state
+}
+
+export function verifySubnetMaskRepair(
+  engine: Pick<BattleEngine, 'verifyRepair'>,
+  state: BattleEngineState,
+  networkState: NetworkState,
+  targets: readonly string[],
+): SubnetMaskRepairVerificationResult {
+  const pings = Object.freeze(
+    targets.map((target) =>
+      Object.freeze({ ...simulatePing(networkState, target) }),
+    ),
+  )
+
+  return Object.freeze({
+    state: engine.verifyRepair(
+      state,
+      pings.length > 0 && pings.every((ping) => ping.reachable),
+    ),
+    pings,
   })
 }

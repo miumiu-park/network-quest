@@ -58,7 +58,7 @@ describe('LAN Village', () => {
     )
   })
 
-  it('keeps Subnet Golem selectable while marking its quest unavailable', async () => {
+  it('opens the Subnet Golem Boss request from its selected node', async () => {
     const user = userEvent.setup()
     renderVillage()
     const golem = screen.getByRole('button', { name: /Subnet Golem/ })
@@ -66,7 +66,9 @@ describe('LAN Village', () => {
     await user.click(golem)
 
     expect(golem).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('このQuestは現在準備中です。')).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Boss依頼を確認' }),
+    ).toHaveAttribute('href', '/event/subnet-golem')
   })
 
   it('opens the Gateway Goblin request from its selected node', async () => {

@@ -15,6 +15,11 @@ export {
   IP_SLIME_GATEWAY,
   IP_SLIME_SCENARIO,
 } from './ipSlimeScenario'
+export {
+  SUBNET_GOLEM_CORRECT_MASK,
+  SUBNET_GOLEM_PEER_ADDRESSES,
+  SUBNET_GOLEM_SCENARIO,
+} from './subnetGolemScenario'
 export { loadScenario } from './loadScenario'
 export type { ScenarioLoadError, ScenarioLoadResult } from './loadScenario'
 export type {
