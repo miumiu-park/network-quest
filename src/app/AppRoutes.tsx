@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import {
   Link,
   Navigate,
@@ -8,6 +8,7 @@ import {
   useParams,
 } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
+import type { ScenarioId } from '../scenario'
 import {
   DNS_SLIME_SCENARIO,
   GATEWAY_GOBLIN_SCENARIO,
@@ -22,6 +23,7 @@ import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
 import { APP_ROUTES } from './routes'
+import { usePlayerProgress } from './usePlayerProgress'
 
 interface ScreenProps {
   readonly title: string
@@ -100,9 +102,18 @@ function EventRoute() {
   )
 }
 
-function ResultRoute() {
+interface ResultRouteProps {
+  readonly completeScenario: (scenarioId: ScenarioId) => void
+}
+
+function ResultRoute({ completeScenario }: ResultRouteProps) {
   const location = useLocation()
   const result = getResultSummary(location.state)
+  const review = getLearningReview(location.state)
+
+  useEffect(() => {
+    if (review !== null) completeScenario(review.scenarioId)
+  }, [completeScenario, review])
 
   return (
     <Screen title="Result">
@@ -141,12 +152,18 @@ function getResultSummary(state: unknown): ResultSummary {
   }
 }
 
-function LearningRoute() {
+interface LearningRouteProps {
+  readonly completedScenarios: readonly ScenarioId[]
+}
+
+function LearningRoute({ completedScenarios }: LearningRouteProps) {
   const location = useLocation()
   const review = getLearningReview(location.state)
 
   if (review !== null) {
-    return <LearningReview review={review} />
+    return (
+      <LearningReview review={review} completedScenarios={completedScenarios} />
+    )
   }
 
   return (
@@ -170,17 +187,30 @@ function getLearningReview(state: unknown): LearningReviewModel | null {
 }
 
 export function AppRoutes() {
+  const { player, completeScenario } = usePlayerProgress()
+
   return (
     <Routes>
       <Route
         path={APP_ROUTES.home}
         element={<Navigate to={APP_ROUTES.village} replace />}
       />
-      <Route path={APP_ROUTES.village} element={<LanVillage />} />
+      <Route
+        path={APP_ROUTES.village}
+        element={<LanVillage completedScenarios={player.completedScenarios} />}
+      />
       <Route path={APP_ROUTES.event} element={<EventRoute />} />
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />
-      <Route path={APP_ROUTES.result} element={<ResultRoute />} />
-      <Route path={APP_ROUTES.learning} element={<LearningRoute />} />
+      <Route
+        path={APP_ROUTES.result}
+        element={<ResultRoute completeScenario={completeScenario} />}
+      />
+      <Route
+        path={APP_ROUTES.learning}
+        element={
+          <LearningRoute completedScenarios={player.completedScenarios} />
+        }
+      />
     </Routes>
   )
 }

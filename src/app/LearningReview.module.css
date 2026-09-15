@@ -31,7 +31,8 @@
 }
 
 .card,
-.steps {
+.steps,
+.nextAction {
   box-sizing: border-box;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -61,6 +62,27 @@
   width: min(900px, 100%);
 }
 
+.nextAction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(900px, 100%);
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.nextAction h2,
+.nextAction p {
+  margin: 4px 0;
+}
+
+.nextLinks {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
 .steps ol {
   display: grid;
   gap: 12px;
@@ -78,12 +100,22 @@
   overflow-wrap: anywhere;
 }
 
-.returnLink {
+.returnLink,
+.nextLink {
   border-radius: 6px;
+  padding: 10px 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.returnLink {
+  border: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.nextLink {
   background: var(--accent);
   color: #fff;
-  padding: 10px 16px;
-  text-decoration: none;
 }
 
 @media (max-width: 700px) {
@@ -93,5 +125,16 @@
 
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .nextAction,
+  .nextLinks {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .returnLink,
+  .nextLink {
+    text-align: center;
   }
 }

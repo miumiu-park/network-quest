@@ -34,8 +34,10 @@ export function NpcEvent({ scenario }: NpcEventProps) {
       <section className={styles.mission} aria-labelledby="mission-title">
         <div>
           <p className={styles.eyebrow}>Mission update</p>
-          <h2 id="mission-title">接続できない症状を確認する</h2>
-          <p>依頼を引き受け、Villageで起きている問題を解決してください。</p>
+          <h2 id="mission-title">症状から通信障害を解決する</h2>
+          <p>
+            この症状をTerminalで調査し、原因を特定して修復し、最後に通信を再確認してください。
+          </p>
         </div>
         <span className={styles.status}>NEW QUEST</span>
       </section>

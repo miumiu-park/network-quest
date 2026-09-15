@@ -37,6 +37,7 @@ import {
   type TerminalExecutor,
 } from '../terminal'
 import { BattleEffects } from './BattleEffects'
+import { BattleProgress } from './BattleProgress'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import styles from './DnsSlimeBattle.module.css'
@@ -193,6 +194,8 @@ export function DnsSlimeBattle() {
         </div>
         <p className={styles.scenarioTitle}>{DNS_SLIME_SCENARIO.title}</p>
       </header>
+
+      <BattleProgress state={battleState} />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">

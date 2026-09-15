@@ -3,7 +3,11 @@ export {
   createInitialGameState,
   initialGameState,
 } from './gameState'
-export { InvalidGameTransitionError, transitionGameState } from './gameFlow'
+export {
+  InvalidGameTransitionError,
+  completeScenarioProgress,
+  transitionGameState,
+} from './gameFlow'
 export type { GameAction } from './gameFlow'
 export type {
   BattleState,

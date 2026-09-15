@@ -37,10 +37,44 @@ describe('LAN Village', () => {
       'aria-pressed',
       'true',
     )
-    expect(screen.getByRole('link', { name: '症状を聞く' })).toHaveAttribute(
-      'href',
-      '/event/dns-slime',
+    expect(
+      screen.getByRole('link', { name: 'IP Slimeから始める' }),
+    ).toHaveAttribute('href', '/event/ip-slime')
+  })
+
+  it('shows the game loop and beginner recommendation metadata', async () => {
+    const user = userEvent.setup()
+    renderVillage()
+
+    expect(
+      screen.getByRole('region', { name: 'Network Questの進め方' }),
+    ).toHaveTextContent(
+      /症状を確認.*Terminalで調査.*原因を特定.*設定を修復.*通信を再確認.*Learning Review/,
     )
+    expect(screen.getByText('次におすすめ')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /IP Slime/ }))
+    expect(screen.getByText('学習テーマ').nextElementSibling).toHaveTextContent(
+      'Host Addressing',
+    )
+    expect(screen.getByText('難易度').nextElementSibling).toHaveTextContent(
+      '初級',
+    )
+  })
+
+  it('derives clear and next-recommendation status from completed scenarios', () => {
+    render(
+      <MemoryRouter>
+        <LanVillage completedScenarios={['ip-slime']} />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('button', { name: /IP Slime/ })).toHaveTextContent(
+      'クリア済み',
+    )
+    expect(
+      screen.getByRole('button', { name: /Gateway Goblin/ }),
+    ).toHaveTextContent('次におすすめ')
   })
 
   it('routes the selected monster through its request before Battle', async () => {

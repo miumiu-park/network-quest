@@ -22,6 +22,12 @@ export {
 } from './subnetGolemScenario'
 export { loadScenario } from './loadScenario'
 export type { ScenarioLoadError, ScenarioLoadResult } from './loadScenario'
+export {
+  SCENARIO_GUIDES,
+  getNextRecommendedScenario,
+  getScenarioGuide,
+} from './scenarioCatalog'
+export type { ScenarioDifficulty, ScenarioGuide } from './scenarioCatalog'
 export type {
   JsonValue,
   Scenario,
