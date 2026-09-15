@@ -22,6 +22,10 @@ describe('DNS Slime playable scenario', () => {
     )
     expect(screen.getByRole('textbox', { name: 'コマンド' })).toBeEnabled()
     expect(screen.getByRole('button', { name: 'DNS' })).toBeEnabled()
+    expect(screen.getByText('調査').closest('li')).toHaveAttribute(
+      'aria-current',
+      'step',
+    )
   })
 
   it('plays through investigation, repair, verification, Result and Learning', async () => {
@@ -37,6 +41,10 @@ describe('DNS Slime playable scenario', () => {
     expect(screen.getByText(/Reply from 192\.168\.1\.1/)).toBeInTheDocument()
     expect(screen.getByText('Investigation Success')).toBeInTheDocument()
     expect(screen.getByText('Enemy Damage')).toBeInTheDocument()
+    expect(screen.getByText('原因特定').closest('li')).toHaveAttribute(
+      'aria-current',
+      'step',
+    )
 
     await user.type(terminal, 'ping 203.0.113.20{enter}')
     expect(screen.getByText(/Reply from 203\.0\.113\.20/)).toBeInTheDocument()
@@ -47,6 +55,10 @@ describe('DNS Slime playable scenario', () => {
     await user.click(screen.getByRole('button', { name: 'DNS' }))
     expect(screen.getByText(/正解です/)).toBeInTheDocument()
     expect(screen.getByText('Weakness Found')).toBeInTheDocument()
+    expect(screen.getByText('修復').closest('li')).toHaveAttribute(
+      'aria-current',
+      'step',
+    )
 
     await user.click(screen.getByRole('button', { name: 'DNS設定を修復' }))
     expect(screen.getByText('REPAIRED')).toBeInTheDocument()
@@ -54,6 +66,10 @@ describe('DNS Slime playable scenario', () => {
       '192.168.1.53',
     )
     expect(screen.queryByText('Stage Clear')).not.toBeInTheDocument()
+    expect(screen.getByText('再確認').closest('li')).toHaveAttribute(
+      'aria-current',
+      'step',
+    )
 
     await user.type(terminal, 'nslookup quest.example{enter}')
     expect(screen.getByText('Stage Clear')).toBeInTheDocument()
@@ -97,5 +113,8 @@ describe('DNS Slime playable scenario', () => {
     expect(
       screen.getByRole('region', { name: '原因を特定できた理由' }),
     ).toHaveTextContent(/IP到達性と名前解決を順番に確認/)
+    expect(screen.getByRole('region', { name: '次の行動' })).toHaveTextContent(
+      '今回クリア: DNS Slime次におすすめ: IP Slime',
+    )
   })
 })

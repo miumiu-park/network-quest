@@ -1,13 +1,28 @@
 import { Link } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
+import {
+  getNextRecommendedScenario,
+  getScenarioGuide,
+  type ScenarioId,
+} from '../scenario'
 import { APP_ROUTES } from './routes'
 import styles from './LearningReview.module.css'
 
 interface LearningReviewProps {
   readonly review: LearningReviewModel
+  readonly completedScenarios?: readonly ScenarioId[]
 }
 
-export function LearningReview({ review }: LearningReviewProps) {
+export function LearningReview({
+  review,
+  completedScenarios = [],
+}: LearningReviewProps) {
+  const currentGuide = getScenarioGuide(review.scenarioId)
+  const completedWithCurrent = [
+    ...new Set([...completedScenarios, review.scenarioId]),
+  ]
+  const nextGuide = getNextRecommendedScenario(completedWithCurrent)
+
   return (
     <main id="center" className={styles.screen}>
       <header className={styles.heading}>
@@ -67,9 +82,36 @@ export function LearningReview({ review }: LearningReviewProps) {
         </ol>
       </section>
 
-      <Link className={styles.returnLink} to={APP_ROUTES.village}>
-        LAN Villageへ戻る
-      </Link>
+      <section className={styles.nextAction} aria-labelledby="next-action">
+        <div>
+          <p className={styles.eyebrow}>Quest complete</p>
+          <h2 id="next-action">次の行動</h2>
+          <p>
+            今回クリア: {currentGuide?.scenario.enemy.name ?? review.scenarioId}
+          </p>
+          {nextGuide === null ? (
+            <p>全Scenarioをクリアしました。Villageで達成状況を確認できます。</p>
+          ) : (
+            <p>
+              次におすすめ: {nextGuide.scenario.enemy.name}（
+              {nextGuide.learningTheme} / {nextGuide.difficulty}）
+            </p>
+          )}
+        </div>
+        <div className={styles.nextLinks}>
+          <Link className={styles.returnLink} to={APP_ROUTES.village}>
+            LAN Villageへ戻る
+          </Link>
+          {nextGuide !== null && (
+            <Link
+              className={styles.nextLink}
+              to={`/event/${nextGuide.scenario.id}`}
+            >
+              次の依頼を確認
+            </Link>
+          )}
+        </div>
+      </section>
     </main>
   )
 }

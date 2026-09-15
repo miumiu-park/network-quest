@@ -1,6 +1,11 @@
 import { addExperience } from '../progression'
 import type { ScenarioReward } from '../scenario'
-import type { GameScreen, GameState, ScenarioId } from './gameState'
+import type {
+  GameScreen,
+  GameState,
+  PlayerState,
+  ScenarioId,
+} from './gameState'
 
 export type GameAction =
   | { readonly type: 'OPEN_EVENT'; readonly scenarioId: ScenarioId }
@@ -14,6 +19,25 @@ export class InvalidGameTransitionError extends Error {
     super(`Cannot perform ${action} from ${currentScreen}`)
     this.name = 'InvalidGameTransitionError'
   }
+}
+
+export function completeScenarioProgress(
+  player: PlayerState,
+  scenarioId: ScenarioId,
+  reward: ScenarioReward,
+): PlayerState {
+  if (player.completedScenarios.includes(scenarioId)) return player
+
+  const progression = addExperience(player, reward.exp)
+
+  return Object.freeze({
+    ...player,
+    ...progression,
+    completedScenarios: Object.freeze([
+      ...player.completedScenarios,
+      scenarioId,
+    ]),
+  })
 }
 
 function requireScreen(
@@ -65,25 +89,16 @@ export function transitionGameState(
       }
 
       const scenarioId = state.battleState.scenarioId
-      const alreadyCompleted =
-        state.player.completedScenarios.includes(scenarioId)
-      const progression = alreadyCompleted
-        ? state.player
-        : addExperience(state.player, action.reward.exp)
+      const player = completeScenarioProgress(
+        state.player,
+        scenarioId,
+        action.reward,
+      )
 
       return {
         ...state,
         currentScreen: 'RESULT',
-        player: alreadyCompleted
-          ? state.player
-          : {
-              ...state.player,
-              ...progression,
-              completedScenarios: [
-                ...state.player.completedScenarios,
-                scenarioId,
-              ],
-            },
+        player,
         battleState: {
           ...state.battleState,
           status: 'CLEARED',

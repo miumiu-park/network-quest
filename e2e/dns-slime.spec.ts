@@ -11,6 +11,9 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
 }) => {
   await page.goto('/village')
   await expect(page.getByRole('heading', { name: 'LAN Village' })).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: 'Network Questの進め方' }),
+  ).toBeVisible()
 
   await page.getByRole('button', { name: /DNS Slime/ }).click()
   await page.getByRole('link', { name: '依頼を確認' }).click()
@@ -19,6 +22,12 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
 
   await page.getByRole('link', { name: '調査を開始' }).click()
   await expect(page).toHaveURL(/\/battle\/dns-slime$/)
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Battle進行ガイド' })
+      .getByRole('listitem')
+      .filter({ hasText: '調査' }),
+  ).toHaveAttribute('aria-current', 'step')
 
   await runCommand(page, 'ping gateway')
   await expect(page.getByText(/Reply from 192\.168\.1\.1/)).toBeVisible()
@@ -56,5 +65,13 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   )
   await expect(page.getByRole('region', { name: '使用command' })).toContainText(
     'nslookup',
+  )
+  await expect(page.getByRole('region', { name: '次の行動' })).toContainText(
+    '次におすすめ: IP Slime',
+  )
+
+  await page.getByRole('link', { name: 'LAN Villageへ戻る' }).click()
+  await expect(page.getByRole('button', { name: /DNS Slime/ })).toContainText(
+    'クリア済み',
   )
 })

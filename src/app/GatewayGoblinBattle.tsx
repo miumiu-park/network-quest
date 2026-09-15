@@ -36,6 +36,7 @@ import {
   type TerminalExecutor,
 } from '../terminal'
 import { BattleEffects } from './BattleEffects'
+import { BattleProgress } from './BattleProgress'
 import styles from './DnsSlimeBattle.module.css'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
@@ -193,6 +194,8 @@ export function GatewayGoblinBattle() {
         </div>
         <p className={styles.scenarioTitle}>{GATEWAY_GOBLIN_SCENARIO.title}</p>
       </header>
+
+      <BattleProgress state={battleState} />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">

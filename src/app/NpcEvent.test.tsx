@@ -38,4 +38,14 @@ describe('NPC Event', () => {
       '/battle/dns-slime',
     )
   })
+
+  it('explains the mission loop without revealing the solution', () => {
+    renderEvent()
+
+    expect(
+      screen.getByRole('region', { name: '症状から通信障害を解決する' }),
+    ).toHaveTextContent(
+      'Terminalで調査し、原因を特定して修復し、最後に通信を再確認',
+    )
+  })
 })
