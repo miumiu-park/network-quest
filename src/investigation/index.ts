@@ -1,4 +1,10 @@
 export { createInvestigationHistory } from './investigationHistory'
+export { createNetworkDiagramFeedback } from './networkDiagramFeedback'
+export type {
+  CommunicationFeedbackItem,
+  CommunicationStatus,
+  NetworkDiagramFeedback,
+} from './networkDiagramFeedback'
 export { createObservations } from './observation'
 export type {
   InvestigationClock,

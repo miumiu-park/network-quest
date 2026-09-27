@@ -43,6 +43,7 @@ import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import { ProgressiveHints } from './ProgressiveHints'
 import { useProgressiveHints } from './useProgressiveHints'
+import { useNetworkDiagramFeedback } from './useNetworkDiagramFeedback'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === GATEWAY_GOBLIN_SCENARIO.answer.cause,
@@ -88,6 +89,9 @@ export function GatewayGoblinBattle() {
   )
   const [history] = useState(() => createInvestigationHistory())
   const hints = useProgressiveHints(GATEWAY_GOBLIN_SCENARIO.hints)
+  const { feedback, recordObservations } = useNetworkDiagramFeedback(
+    GATEWAY_GOBLIN_SCENARIO.topology,
+  )
   const [message, setMessage] = useState(
     '現在の設定、Router、外部IPの順に到達性を比較してください。',
   )
@@ -112,6 +116,7 @@ export function GatewayGoblinBattle() {
       const entry = history.getEntries().at(-1)
 
       if (entry !== undefined) {
+        recordObservations(entry.observations)
         setBattleState((currentState) => {
           const investigatedState = applyInvestigationObservations(
             battleEngine,
@@ -139,7 +144,7 @@ export function GatewayGoblinBattle() {
 
       return result
     }
-  }, [history, networkState])
+  }, [history, networkState, recordObservations])
 
   function submitCause(answer: CauseAnswer) {
     setBattleState((currentState) =>
@@ -283,6 +288,7 @@ export function GatewayGoblinBattle() {
           </div>
           <NetworkDiagram
             topology={GATEWAY_GOBLIN_SCENARIO.topology}
+            feedback={feedback}
             details={[
               { label: 'Default Gateway', value: networkState.client.gateway },
               { label: 'Subnet', value: networkState.client.subnetMask },

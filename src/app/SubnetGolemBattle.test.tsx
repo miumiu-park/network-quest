@@ -23,6 +23,9 @@ describe('Subnet Golem playable Boss scenario', () => {
     expect(screen.getByText(/Reply from 192\.168\.1\.20/)).toBeInTheDocument()
     await user.type(terminal, 'ping 192.168.1.130{enter}')
     expect(screen.getByText(/Request timed out/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Target (192.168.1.130): 通信失敗')
 
     await user.click(screen.getByRole('button', { name: 'Subnet Mask' }))
     expect(screen.getByText('Weakness Found')).toBeInTheDocument()
@@ -38,6 +41,9 @@ describe('Subnet Golem playable Boss scenario', () => {
     expect(screen.queryByText('Stage Clear')).not.toBeInTheDocument()
     await user.type(terminal, 'ping 192.168.1.130{enter}')
     expect(screen.getByText('Stage Clear')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Target (192.168.1.130): 通信成功')
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
     expect(

@@ -43,9 +43,14 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
 
   await runCommand(page, 'ping gateway')
   await expect(page.getByText(/Reply from 192\.168\.1\.1/)).toBeVisible()
+  const pathFeedback = page.getByRole('region', {
+    name: '通信経路の調査結果',
+  })
+  await expect(pathFeedback).toContainText('Gateway (gateway): 通信成功')
 
   await runCommand(page, 'nslookup quest.example')
   await expect(page.getByText(/configured DNS server/)).toBeVisible()
+  await expect(pathFeedback).toContainText('DNS (quest.example): 通信失敗')
 
   await page.getByRole('button', { name: 'DNS', exact: true }).click()
   await expect(page.getByText('Weakness Found')).toBeVisible()
@@ -56,6 +61,7 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
 
   await runCommand(page, 'nslookup quest.example')
   await expect(page.getByText('Stage Clear')).toBeVisible()
+  await expect(pathFeedback).toContainText('DNS (quest.example): 通信成功')
 
   await page.getByRole('button', { name: 'Resultへ' }).click()
   await expect(page).toHaveURL(/\/result$/)

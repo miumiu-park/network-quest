@@ -37,6 +37,16 @@
   padding: 11px;
 }
 
+.node[data-communication-status='SUCCESS'] {
+  border-color: #22c55e;
+  box-shadow: inset 3px 0 #22c55e;
+}
+
+.node[data-communication-status='FAILURE'] {
+  border-color: #ef4444;
+  box-shadow: inset 3px 0 #ef4444;
+}
+
 .nodeMarker {
   width: 13px;
   height: 13px;
@@ -57,6 +67,24 @@
   font-size: 0.66rem;
 }
 
+.nodeStatus {
+  grid-column: 1 / -1;
+  width: fit-content;
+  border-radius: 999px;
+  background: var(--code-bg);
+  padding: 2px 7px;
+  color: var(--text);
+  font: 700 0.58rem/1.4 var(--mono);
+}
+
+.node[data-communication-status='SUCCESS'] .nodeStatus {
+  color: #15803d;
+}
+
+.node[data-communication-status='FAILURE'] .nodeStatus {
+  color: #b91c1c;
+}
+
 .dnsBranch {
   display: grid;
   gap: 7px;
@@ -70,6 +98,63 @@
   font: 700 0.58rem/1.4 var(--mono);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.feedback {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--code-bg);
+  padding: 10px;
+}
+
+.feedback h3,
+.feedback p,
+.feedback ul {
+  margin: 0;
+}
+
+.feedback h3 {
+  color: var(--text-h);
+  font-size: 0.72rem;
+}
+
+.feedback p,
+.feedback li {
+  margin-top: 6px;
+  color: var(--text);
+  font-size: 0.68rem;
+}
+
+.feedback ul {
+  padding: 0;
+  list-style: none;
+}
+
+.feedback li span {
+  display: inline-grid;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg);
+  font-weight: 900;
+}
+
+.feedback li[data-status='SUCCESS'] span {
+  color: #15803d;
+}
+
+.feedback li[data-status='FAILURE'] span {
+  color: #b91c1c;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .node {
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+  }
 }
 
 .diagram figcaption {
