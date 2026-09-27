@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   Link,
   Navigate,
@@ -8,6 +8,11 @@ import {
   useParams,
 } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
+import {
+  parseStageResult,
+  type ScenarioProgressResult,
+  type StageResult,
+} from '../game'
 import type { ScenarioId } from '../scenario'
 import {
   DNS_SLIME_SCENARIO,
@@ -103,22 +108,53 @@ function EventRoute() {
 }
 
 interface ResultRouteProps {
-  readonly completeScenario: (scenarioId: ScenarioId) => void
+  readonly recordStageResult: (
+    result: StageResult,
+  ) => ScenarioProgressResult | null
 }
 
-function ResultRoute({ completeScenario }: ResultRouteProps) {
+function ResultRoute({ recordStageResult }: ResultRouteProps) {
   const location = useLocation()
-  const result = getResultSummary(location.state)
-  const review = getLearningReview(location.state)
+  const result = getStageResult(location.state)
+  const processed = useRef(false)
+  const [progressResult, setProgressResult] =
+    useState<ScenarioProgressResult | null>(null)
 
   useEffect(() => {
-    if (review !== null) completeScenario(review.scenarioId)
-  }, [completeScenario, review])
+    if (result === null || processed.current) return
+    processed.current = true
+    setProgressResult(recordStageResult(result))
+  }, [recordStageResult, result])
+
+  if (result === null) {
+    return (
+      <Screen title="Result">
+        <p>Battle結果を確認できませんでした。</p>
+        <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
+      </Screen>
+    )
+  }
 
   return (
     <Screen title="Result">
       <h2>{result.enemyName} 撃破</h2>
-      <p>獲得EXP: {result.exp}</p>
+      <p>Rank: {result.rank}</p>
+      {progressResult?.isNewBestRank === true && <p>NEW RECORD</p>}
+      <dl aria-label="Stage performance">
+        <div>
+          <dt>Commands</dt>
+          <dd>{result.performance.commandCount}</dd>
+        </div>
+        <div>
+          <dt>Wrong Answers</dt>
+          <dd>{result.performance.incorrectAnswerCount}</dd>
+        </div>
+        <div>
+          <dt>Hints</dt>
+          <dd>{result.performance.hintCount}</dd>
+        </div>
+      </dl>
+      <p>獲得EXP: {progressResult?.expAwarded ?? result.exp}</p>
       <Link to={APP_ROUTES.learning} state={location.state}>
         学習レビューへ
       </Link>
@@ -126,30 +162,12 @@ function ResultRoute({ completeScenario }: ResultRouteProps) {
   )
 }
 
-interface ResultSummary {
-  readonly enemyName: string
-  readonly exp: number
-}
-
-function getResultSummary(state: unknown): ResultSummary {
-  if (
-    typeof state === 'object' &&
-    state !== null &&
-    'resultSummary' in state &&
-    typeof state.resultSummary === 'object' &&
-    state.resultSummary !== null &&
-    'enemyName' in state.resultSummary &&
-    typeof state.resultSummary.enemyName === 'string' &&
-    'exp' in state.resultSummary &&
-    typeof state.resultSummary.exp === 'number'
-  ) {
-    return state.resultSummary as ResultSummary
+function getStageResult(state: unknown): StageResult | null {
+  if (typeof state === 'object' && state !== null && 'stageResult' in state) {
+    return parseStageResult(state.stageResult)
   }
 
-  return {
-    enemyName: DNS_SLIME_SCENARIO.enemy.name,
-    exp: DNS_SLIME_SCENARIO.reward.exp,
-  }
+  return null
 }
 
 interface LearningRouteProps {
@@ -187,7 +205,7 @@ function getLearningReview(state: unknown): LearningReviewModel | null {
 }
 
 export function AppRoutes() {
-  const { player, completeScenario } = usePlayerProgress()
+  const { player, recordStageResult } = usePlayerProgress()
 
   return (
     <Routes>
@@ -203,7 +221,7 @@ export function AppRoutes() {
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />
       <Route
         path={APP_ROUTES.result}
-        element={<ResultRoute completeScenario={completeScenario} />}
+        element={<ResultRoute recordStageResult={recordStageResult} />}
       />
       <Route
         path={APP_ROUTES.learning}

@@ -1,4 +1,8 @@
-import { createProgressionState, type ProgressionState } from '../progression'
+import {
+  createProgressionState,
+  type ProgressionState,
+  type StageRank,
+} from '../progression'
 import type { ScenarioId } from '../scenario/scenario'
 
 export const GAME_SCREENS = [
@@ -16,6 +20,7 @@ export type { ScenarioId } from '../scenario/scenario'
 export interface PlayerState extends ProgressionState {
   readonly completedScenarios: readonly ScenarioId[]
   readonly unlockedCommands: readonly string[]
+  readonly bestRanks: Readonly<Partial<Record<ScenarioId, StageRank>>>
 }
 
 export type BattleStatus = 'IN_PROGRESS' | 'CLEARED' | 'FAILED'
@@ -40,6 +45,7 @@ export function createInitialGameState(): GameState {
       ...createProgressionState(),
       completedScenarios: [],
       unlockedCommands: [],
+      bestRanks: Object.freeze({}),
     },
     battleState: null,
   }

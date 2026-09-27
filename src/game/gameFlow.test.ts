@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { InvalidGameTransitionError, transitionGameState } from './gameFlow'
+import {
+  InvalidGameTransitionError,
+  recordScenarioProgress,
+  transitionGameState,
+} from './gameFlow'
 import { createInitialGameState } from './gameState'
 
 const DUMMY_SCENARIO_ID = 'dns-slime'
@@ -127,6 +131,39 @@ describe('transitionGameState', () => {
       nextLevelExp: 1000,
       completedScenarios: [DUMMY_SCENARIO_ID],
     })
+  })
+
+  it('updates Best Rank on replay without awarding EXP twice', () => {
+    const player = recordScenarioProgress(
+      createInitialGameState().player,
+      DUMMY_SCENARIO_ID,
+      { exp: 100 },
+      'B',
+    ).player
+
+    const improved = recordScenarioProgress(
+      player,
+      DUMMY_SCENARIO_ID,
+      { exp: 100 },
+      'A',
+    )
+    expect(improved).toMatchObject({
+      expAwarded: 0,
+      isNewBestRank: true,
+      player: { exp: 100, bestRanks: { [DUMMY_SCENARIO_ID]: 'A' } },
+    })
+
+    const worse = recordScenarioProgress(
+      improved.player,
+      DUMMY_SCENARIO_ID,
+      { exp: 100 },
+      'C',
+    )
+    expect(worse).toMatchObject({
+      expAwarded: 0,
+      isNewBestRank: false,
+    })
+    expect(worse.player).toBe(improved.player)
   })
 })
 

@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
-  completeScenarioProgress,
   createInitialGameState,
+  recordScenarioProgress,
+  type ScenarioProgressResult,
+  type StageResult,
   type PlayerState,
-  type ScenarioId,
 } from '../game'
 import { getScenarioGuide } from '../scenario'
 import {
@@ -13,7 +14,9 @@ import {
 
 export interface PlayerProgressController {
   readonly player: PlayerState
-  readonly completeScenario: (scenarioId: ScenarioId) => void
+  readonly recordStageResult: (
+    result: StageResult,
+  ) => ScenarioProgressResult | null
 }
 
 export function usePlayerProgress(
@@ -25,26 +28,28 @@ export function usePlayerProgress(
   const [player, setPlayer] = useState(
     () => repository.load() ?? createInitialGameState().player,
   )
+  const playerRef = useRef(player)
 
-  const completeScenario = useCallback(
-    (scenarioId: ScenarioId) => {
-      const guide = getScenarioGuide(scenarioId)
-      if (guide === undefined) return
+  const recordStageResult = useCallback(
+    (result: StageResult) => {
+      const guide = getScenarioGuide(result.scenarioId)
+      if (guide === undefined) return null
 
-      setPlayer((currentPlayer) => {
-        const nextPlayer = completeScenarioProgress(
-          currentPlayer,
-          scenarioId,
-          guide.scenario.reward,
-        )
-        if (nextPlayer === currentPlayer) return currentPlayer
-
-        repository.save(nextPlayer)
-        return nextPlayer
-      })
+      const progressResult = recordScenarioProgress(
+        playerRef.current,
+        result.scenarioId,
+        guide.scenario.reward,
+        result.rank,
+      )
+      if (progressResult.player !== playerRef.current) {
+        repository.save(progressResult.player)
+        playerRef.current = progressResult.player
+        setPlayer(progressResult.player)
+      }
+      return progressResult
     },
     [repository],
   )
 
-  return { player, completeScenario }
+  return { player, recordStageResult }
 }

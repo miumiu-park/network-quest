@@ -13,6 +13,7 @@ import {
   type InvestigationObservation,
 } from '../investigation'
 import { createLearningReview } from '../learning'
+import { createStageResult } from '../game'
 import {
   createNetworkSimulator,
   createNetworkState,
@@ -175,6 +176,11 @@ export function DnsSlimeBattle() {
   function showResult() {
     navigate(APP_ROUTES.result, {
       state: {
+        stageResult: createStageResult({
+          scenario: DNS_SLIME_SCENARIO,
+          battleState,
+          commandCount: history.getEntries().length,
+        }),
         learningReview: createLearningReview(
           DNS_SLIME_SCENARIO,
           history.getEntries(),

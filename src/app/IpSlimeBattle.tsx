@@ -13,6 +13,7 @@ import {
   type InvestigationObservation,
 } from '../investigation'
 import { createLearningReview } from '../learning'
+import { createStageResult } from '../game'
 import {
   createNetworkSimulator,
   createNetworkState,
@@ -163,10 +164,11 @@ export function IpSlimeBattle() {
   function showResult() {
     navigate(APP_ROUTES.result, {
       state: {
-        resultSummary: {
-          enemyName: IP_SLIME_SCENARIO.enemy.name,
-          exp: IP_SLIME_SCENARIO.reward.exp,
-        },
+        stageResult: createStageResult({
+          scenario: IP_SLIME_SCENARIO,
+          battleState,
+          commandCount: history.getEntries().length,
+        }),
         learningReview: createLearningReview(
           IP_SLIME_SCENARIO,
           history.getEntries(),
