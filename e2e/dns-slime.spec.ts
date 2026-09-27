@@ -14,6 +14,10 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   await expect(
     page.getByRole('region', { name: 'Network Questの進め方' }),
   ).toBeVisible()
+  const playerStatus = page.getByRole('region', { name: 'Network Adventurer' })
+  await expect(playerStatus).toContainText('Level1')
+  await expect(playerStatus).toContainText('Experience0 / 100 EXP')
+  await expect(playerStatus).toContainText('Quest Clear0 / 4')
 
   await page.getByRole('button', { name: /DNS Slime/ }).click()
   await page.getByRole('link', { name: '依頼を確認' }).click()
@@ -84,6 +88,9 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   )
 
   await page.getByRole('link', { name: 'LAN Villageへ戻る' }).click()
+  await expect(playerStatus).toContainText('Level2')
+  await expect(playerStatus).toContainText('Experience100 / 300 EXP')
+  await expect(playerStatus).toContainText('Quest Clear1 / 4')
   await expect(page.getByRole('button', { name: /DNS Slime/ })).toContainText(
     'クリア済み',
   )
