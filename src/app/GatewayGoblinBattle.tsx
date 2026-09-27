@@ -13,6 +13,7 @@ import {
   type InvestigationObservation,
 } from '../investigation'
 import { createLearningReview } from '../learning'
+import { createStageResult } from '../game'
 import {
   createNetworkSimulator,
   createNetworkState,
@@ -171,10 +172,11 @@ export function GatewayGoblinBattle() {
   function showResult() {
     navigate(APP_ROUTES.result, {
       state: {
-        resultSummary: {
-          enemyName: GATEWAY_GOBLIN_SCENARIO.enemy.name,
-          exp: GATEWAY_GOBLIN_SCENARIO.reward.exp,
-        },
+        stageResult: createStageResult({
+          scenario: GATEWAY_GOBLIN_SCENARIO,
+          battleState,
+          commandCount: history.getEntries().length,
+        }),
         learningReview: createLearningReview(
           GATEWAY_GOBLIN_SCENARIO,
           history.getEntries(),

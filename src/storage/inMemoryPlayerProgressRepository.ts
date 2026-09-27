@@ -1,5 +1,5 @@
 import type { PlayerState } from '../game'
-import { createProgressionState } from '../progression'
+import { createProgressionState, STAGE_RANKS } from '../progression'
 import type { PlayerProgressRepository } from './playerProgressRepository'
 
 export function createInMemoryPlayerProgressRepository(
@@ -34,12 +34,14 @@ function createPlayerSnapshot(player: PlayerState): PlayerState | null {
 
     const completedScenarios = normalizeUniqueStrings(player.completedScenarios)
     const unlockedCommands = normalizeUniqueStrings(player.unlockedCommands)
+    const bestRanks = normalizeBestRanks(player.bestRanks)
     if (
       completedScenarios === null ||
       completedScenarios.some(
         (scenarioId) => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(scenarioId),
       ) ||
-      unlockedCommands === null
+      unlockedCommands === null ||
+      bestRanks === null
     ) {
       return null
     }
@@ -48,10 +50,30 @@ function createPlayerSnapshot(player: PlayerState): PlayerState | null {
       ...progression,
       completedScenarios: Object.freeze(completedScenarios),
       unlockedCommands: Object.freeze(unlockedCommands),
+      bestRanks: Object.freeze(bestRanks),
     })
   } catch {
     return null
   }
+}
+
+function normalizeBestRanks(
+  bestRanks: PlayerState['bestRanks'],
+): Partial<Record<string, (typeof STAGE_RANKS)[number]>> | null {
+  if (typeof bestRanks !== 'object' || bestRanks === null) return null
+
+  const entries = Object.entries(bestRanks)
+  if (
+    entries.some(
+      ([scenarioId, rank]) =>
+        !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(scenarioId) ||
+        !STAGE_RANKS.some((stageRank) => stageRank === rank),
+    )
+  ) {
+    return null
+  }
+
+  return Object.fromEntries(entries)
 }
 
 function normalizeUniqueStrings(

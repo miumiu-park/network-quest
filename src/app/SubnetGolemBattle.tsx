@@ -13,6 +13,7 @@ import {
   type InvestigationObservation,
 } from '../investigation'
 import { createLearningReview } from '../learning'
+import { createStageResult } from '../game'
 import {
   createNetworkSimulator,
   createNetworkState,
@@ -183,10 +184,11 @@ export function SubnetGolemBattle() {
   function showResult() {
     navigate(APP_ROUTES.result, {
       state: {
-        resultSummary: {
-          enemyName: SUBNET_GOLEM_SCENARIO.enemy.name,
-          exp: SUBNET_GOLEM_SCENARIO.reward.exp,
-        },
+        stageResult: createStageResult({
+          scenario: SUBNET_GOLEM_SCENARIO,
+          battleState,
+          commandCount: history.getEntries().length,
+        }),
         learningReview: createLearningReview(
           SUBNET_GOLEM_SCENARIO,
           history.getEntries(),

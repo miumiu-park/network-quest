@@ -6,9 +6,12 @@ export {
 export {
   InvalidGameTransitionError,
   completeScenarioProgress,
+  recordScenarioProgress,
   transitionGameState,
 } from './gameFlow'
-export type { GameAction } from './gameFlow'
+export type { GameAction, ScenarioProgressResult } from './gameFlow'
+export { createStageResult, parseStageResult } from './stageResult'
+export type { StageResult, StageResultInput } from './stageResult'
 export type {
   BattleState,
   BattleStatus,

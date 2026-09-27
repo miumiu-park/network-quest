@@ -1,4 +1,8 @@
-import { addExperience } from '../progression'
+import {
+  addExperience,
+  isStageRankBetter,
+  type StageRank,
+} from '../progression'
 import type { ScenarioReward } from '../scenario'
 import type {
   GameScreen,
@@ -26,17 +30,48 @@ export function completeScenarioProgress(
   scenarioId: ScenarioId,
   reward: ScenarioReward,
 ): PlayerState {
-  if (player.completedScenarios.includes(scenarioId)) return player
+  return recordScenarioProgress(player, scenarioId, reward).player
+}
 
-  const progression = addExperience(player, reward.exp)
+export interface ScenarioProgressResult {
+  readonly player: PlayerState
+  readonly expAwarded: number
+  readonly isNewBestRank: boolean
+}
 
-  return Object.freeze({
+export function recordScenarioProgress(
+  player: PlayerState,
+  scenarioId: ScenarioId,
+  reward: ScenarioReward,
+  rank?: StageRank,
+): ScenarioProgressResult {
+  const isFirstClear = !player.completedScenarios.includes(scenarioId)
+  const currentBestRank = player.bestRanks[scenarioId]
+  const isNewBestRank =
+    rank !== undefined &&
+    (currentBestRank === undefined || isStageRankBetter(rank, currentBestRank))
+
+  if (!isFirstClear && !isNewBestRank) {
+    return Object.freeze({ player, expAwarded: 0, isNewBestRank: false })
+  }
+
+  const progression = isFirstClear ? addExperience(player, reward.exp) : player
+
+  const nextPlayer = Object.freeze({
     ...player,
     ...progression,
-    completedScenarios: Object.freeze([
-      ...player.completedScenarios,
-      scenarioId,
-    ]),
+    completedScenarios: isFirstClear
+      ? Object.freeze([...player.completedScenarios, scenarioId])
+      : player.completedScenarios,
+    bestRanks: isNewBestRank
+      ? Object.freeze({ ...player.bestRanks, [scenarioId]: rank })
+      : player.bestRanks,
+  })
+
+  return Object.freeze({
+    player: nextPlayer,
+    expAwarded: isFirstClear ? reward.exp : 0,
+    isNewBestRank,
   })
 }
 

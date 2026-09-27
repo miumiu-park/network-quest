@@ -24,6 +24,7 @@ function createPlayer(exp = 100): PlayerState {
     ...createProgressionState(exp),
     completedScenarios: ['dns-slime'],
     unlockedCommands: ['ping', 'nslookup'],
+    bestRanks: { 'dns-slime': 'A' },
   }
 }
 
@@ -36,11 +37,12 @@ describe('LocalStorage PlayerProgressRepository', () => {
     expect(
       JSON.parse(storage.getItem(PLAYER_PROGRESS_STORAGE_KEY) ?? ''),
     ).toEqual({
-      version: 1,
+      version: 2,
       level: 2,
       exp: 100,
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
+      bestRanks: { 'dns-slime': 'A' },
     })
   })
 
@@ -60,10 +62,35 @@ describe('LocalStorage PlayerProgressRepository', () => {
       nextLevelExp: 600,
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
+      bestRanks: { 'dns-slime': 'A' },
     })
     expect(Object.isFrozen(restored)).toBe(true)
     expect(Object.isFrozen(restored?.completedScenarios)).toBe(true)
     expect(Object.isFrozen(restored?.unlockedCommands)).toBe(true)
+    expect(Object.isFrozen(restored?.bestRanks)).toBe(true)
+  })
+
+  it('migrates version 1 progress without losing existing fields', () => {
+    const storage = new MemoryStorage()
+    storage.setItem(
+      PLAYER_PROGRESS_STORAGE_KEY,
+      JSON.stringify({
+        version: 1,
+        level: 2,
+        exp: 100,
+        completedScenarios: ['dns-slime'],
+        unlockedCommands: ['ping', 'nslookup'],
+      }),
+    )
+
+    expect(createLocalStoragePlayerProgressRepository(storage).load()).toEqual({
+      level: 2,
+      exp: 100,
+      nextLevelExp: 300,
+      completedScenarios: ['dns-slime'],
+      unlockedCommands: ['ping', 'nslookup'],
+      bestRanks: {},
+    })
   })
 
   it('returns null when no progress has been saved', () => {

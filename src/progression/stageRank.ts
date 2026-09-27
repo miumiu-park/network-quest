@@ -58,6 +58,13 @@ export function evaluateStageRank(performance: StagePerformance): StageRank {
   )
 }
 
+export function isStageRankBetter(
+  candidate: StageRank,
+  current: StageRank,
+): boolean {
+  return STAGE_RANKS.indexOf(candidate) < STAGE_RANKS.indexOf(current)
+}
+
 function assertNonNegativeInteger(value: number, name: string): void {
   if (!Number.isSafeInteger(value) || value < 0) {
     throw new RangeError(`${name} must be a non-negative safe integer`)

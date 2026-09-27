@@ -51,6 +51,11 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
     page.getByRole('heading', { name: 'DNS Slime 撃破' }),
   ).toBeVisible()
   await expect(page.getByText('獲得EXP: 100')).toBeVisible()
+  await expect(page.getByText('Rank: S')).toBeVisible()
+  await expect(page.getByText('NEW RECORD')).toBeVisible()
+  await expect(page.getByLabel('Stage performance')).toContainText(
+    'Commands3Wrong Answers0Hints0',
+  )
 
   await page.getByRole('link', { name: '学習レビューへ' }).click()
   await expect(page).toHaveURL(/\/learning$/)
