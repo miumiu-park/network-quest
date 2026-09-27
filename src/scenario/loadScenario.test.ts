@@ -42,6 +42,7 @@ const validScenario = {
     summary: 'IP reachability and name resolution are separate checks.',
     keyPoints: ['Verify gateway reachability before testing DNS.'],
   },
+  hints: ['Check IP reachability before name resolution.'],
 }
 
 describe('loadScenario', () => {

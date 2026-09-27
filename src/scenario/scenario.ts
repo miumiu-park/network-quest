@@ -63,4 +63,5 @@ export interface Scenario {
   readonly answer: ScenarioAnswer
   readonly reward: ScenarioReward
   readonly learning: ScenarioLearning
+  readonly hints: readonly string[]
 }

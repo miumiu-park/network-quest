@@ -71,5 +71,10 @@
       "IP AddressとSubnet Maskから所属networkを比較する。",
       "修復後はGatewayへのpingを再実行して到達性の回復を確認する。"
     ]
-  }
+  },
+  "hints": [
+    "まずClientのinterface設定を確認し、表示された各値の役割を整理しましょう。",
+    "Client自身の設定とGatewayへの到達結果を、Network Diagramのaddressと比較しましょう。",
+    "ClientとGatewayが同じlocal networkとして扱われるaddressの組み合わせかを確認しましょう。"
+  ]
 }

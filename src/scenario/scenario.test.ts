@@ -42,6 +42,9 @@ const scenario = {
     summary: 'IP reachability and name resolution are separate checks.',
     keyPoints: ['Verify gateway reachability before testing DNS.'],
   },
+  hints: [
+    'Start by comparing the client interface with the local network path.',
+  ],
 } satisfies Scenario
 
 describe('Scenario', () => {
@@ -57,6 +60,7 @@ describe('Scenario', () => {
       'answer',
       'reward',
       'learning',
+      'hints',
     ])
   })
 })

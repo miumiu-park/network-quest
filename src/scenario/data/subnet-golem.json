@@ -85,5 +85,10 @@
       "到達できる端末とできない端末のnetwork範囲をSubnet Maskから比較する。",
       "修復後は両方の端末へpingを再実行して到達性の回復を確認する。"
     ]
-  }
+  },
+  "hints": [
+    "近いaddressと離れたaddressの2台へ同じ調査を行い、結果の境界を探しましょう。",
+    "Clientのinterface設定にあるnetwork範囲を決める値に注目しましょう。",
+    "2台のPeerが同じlocal networkに含まれるべきか、Client側の範囲判定と比較しましょう。"
+  ]
 }

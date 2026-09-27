@@ -12,6 +12,8 @@ export {
 export type { GameAction, ScenarioProgressResult } from './gameFlow'
 export { createStageResult, parseStageResult } from './stageResult'
 export type { StageResult, StageResultInput } from './stageResult'
+export { createHintProgress, revealNextHint } from './hintProgress'
+export type { HintProgress } from './hintProgress'
 export type {
   BattleState,
   BattleStatus,

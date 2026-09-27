@@ -41,6 +41,8 @@ import { BattleProgress } from './BattleProgress'
 import styles from './DnsSlimeBattle.module.css'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
+import { ProgressiveHints } from './ProgressiveHints'
+import { useProgressiveHints } from './useProgressiveHints'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === GATEWAY_GOBLIN_SCENARIO.answer.cause,
@@ -85,6 +87,7 @@ export function GatewayGoblinBattle() {
     battleEngine.createInitialState,
   )
   const [history] = useState(() => createInvestigationHistory())
+  const hints = useProgressiveHints(GATEWAY_GOBLIN_SCENARIO.hints)
   const [message, setMessage] = useState(
     '現在の設定、Router、外部IPの順に到達性を比較してください。',
   )
@@ -176,6 +179,7 @@ export function GatewayGoblinBattle() {
           scenario: GATEWAY_GOBLIN_SCENARIO,
           battleState,
           commandCount: history.getEntries().length,
+          hintCount: hints.progress.hintCount,
         }),
         learningReview: createLearningReview(
           GATEWAY_GOBLIN_SCENARIO,
@@ -198,6 +202,10 @@ export function GatewayGoblinBattle() {
       </header>
 
       <BattleProgress state={battleState} />
+      <ProgressiveHints
+        {...hints}
+        totalHintCount={GATEWAY_GOBLIN_SCENARIO.hints.length}
+      />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">
