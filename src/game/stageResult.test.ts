@@ -51,4 +51,24 @@ describe('Stage Result', () => {
     expect(parseStageResult(valid)).toEqual(valid)
     expect(parseStageResult({ ...valid, rank: 'C' })).toBeNull()
   })
+
+  it('uses the revealed hint count in the existing rank rules', () => {
+    const engine = createBattleEngine({
+      enemyMaxHp: 100,
+      effectiveInvestigationDamage: 30,
+      correctCause: 'IP_ADDRESS',
+    })
+
+    expect(
+      createStageResult({
+        scenario: IP_SLIME_SCENARIO,
+        battleState: engine.createInitialState(),
+        commandCount: 3,
+        hintCount: 2,
+      }),
+    ).toMatchObject({
+      performance: { hintCount: 2 },
+      rank: 'B',
+    })
+  })
 })

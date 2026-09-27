@@ -41,6 +41,8 @@ import { BattleProgress } from './BattleProgress'
 import styles from './DnsSlimeBattle.module.css'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
+import { ProgressiveHints } from './ProgressiveHints'
+import { useProgressiveHints } from './useProgressiveHints'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === SUBNET_GOLEM_SCENARIO.answer.cause,
@@ -88,6 +90,7 @@ export function SubnetGolemBattle() {
     battleEngine.createInitialState,
   )
   const [history] = useState(() => createInvestigationHistory())
+  const hints = useProgressiveHints(SUBNET_GOLEM_SCENARIO.hints)
   const verifiedTargets = useRef(new Set<string>())
   const [message, setMessage] = useState(
     'interface設定を確認し、2台のLAN端末への到達性を比較してください。',
@@ -188,6 +191,7 @@ export function SubnetGolemBattle() {
           scenario: SUBNET_GOLEM_SCENARIO,
           battleState,
           commandCount: history.getEntries().length,
+          hintCount: hints.progress.hintCount,
         }),
         learningReview: createLearningReview(
           SUBNET_GOLEM_SCENARIO,
@@ -210,6 +214,10 @@ export function SubnetGolemBattle() {
       </header>
 
       <BattleProgress state={battleState} />
+      <ProgressiveHints
+        {...hints}
+        totalHintCount={SUBNET_GOLEM_SCENARIO.hints.length}
+      />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">

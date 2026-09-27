@@ -45,4 +45,5 @@ export const scenarioSchema: z.ZodType<Scenario> = z.strictObject({
     summary: nonEmptyString,
     keyPoints: z.array(nonEmptyString).min(1),
   }),
+  hints: z.array(nonEmptyString).min(1),
 })

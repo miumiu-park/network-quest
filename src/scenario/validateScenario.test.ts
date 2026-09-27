@@ -42,6 +42,7 @@ const validScenario = {
     summary: 'IP reachability and name resolution are separate checks.',
     keyPoints: ['Verify gateway reachability before testing DNS.'],
   },
+  hints: ['Check IP reachability before name resolution.'],
 }
 
 describe('validateScenario', () => {
@@ -66,6 +67,7 @@ describe('validateScenario', () => {
         ...validScenario.learning,
         keyPoints: [],
       },
+      hints: [],
     }
 
     expect(() => validateScenario(invalidScenario)).not.toThrow()
@@ -76,7 +78,12 @@ describe('validateScenario', () => {
     if (!result.success) {
       expect(result.error.message).toBe('Invalid scenario data')
       expect(result.error.issues.map((issue) => issue.path)).toEqual(
-        expect.arrayContaining(['id', 'enemy.maxHp', 'learning.keyPoints']),
+        expect.arrayContaining([
+          'id',
+          'enemy.maxHp',
+          'learning.keyPoints',
+          'hints',
+        ]),
       )
     }
   })

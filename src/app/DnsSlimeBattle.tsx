@@ -40,6 +40,8 @@ import {
 import { BattleEffects } from './BattleEffects'
 import { BattleProgress } from './BattleProgress'
 import { NetworkDiagram } from './NetworkDiagram'
+import { ProgressiveHints } from './ProgressiveHints'
+import { useProgressiveHints } from './useProgressiveHints'
 import { APP_ROUTES } from './routes'
 import styles from './DnsSlimeBattle.module.css'
 
@@ -92,6 +94,7 @@ export function DnsSlimeBattle() {
     battleEngine.createInitialState,
   )
   const [history] = useState(() => createInvestigationHistory())
+  const hints = useProgressiveHints(DNS_SLIME_SCENARIO.hints)
   const [message, setMessage] = useState(
     'Terminalでgateway、外部IP、DNSの順に調査してください。',
   )
@@ -180,6 +183,7 @@ export function DnsSlimeBattle() {
           scenario: DNS_SLIME_SCENARIO,
           battleState,
           commandCount: history.getEntries().length,
+          hintCount: hints.progress.hintCount,
         }),
         learningReview: createLearningReview(
           DNS_SLIME_SCENARIO,
@@ -202,6 +206,10 @@ export function DnsSlimeBattle() {
       </header>
 
       <BattleProgress state={battleState} />
+      <ProgressiveHints
+        {...hints}
+        totalHintCount={DNS_SLIME_SCENARIO.hints.length}
+      />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">

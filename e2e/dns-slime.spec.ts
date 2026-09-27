@@ -29,6 +29,14 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
       .filter({ hasText: '調査' }),
   ).toHaveAttribute('aria-current', 'step')
 
+  await page.getByRole('button', { name: '次のヒントを表示' }).click()
+  await expect(
+    page.getByText('まずGatewayへのIP通信が成功するか確認しましょう。'),
+  ).toBeVisible()
+  await expect(
+    page.getByText(/Gatewayと外部IPへの結果を比較/),
+  ).not.toBeVisible()
+
   await runCommand(page, 'ping gateway')
   await expect(page.getByText(/Reply from 192\.168\.1\.1/)).toBeVisible()
 
@@ -51,10 +59,10 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
     page.getByRole('heading', { name: 'DNS Slime 撃破' }),
   ).toBeVisible()
   await expect(page.getByText('獲得EXP: 100')).toBeVisible()
-  await expect(page.getByText('Rank: S')).toBeVisible()
+  await expect(page.getByText('Rank: A')).toBeVisible()
   await expect(page.getByText('NEW RECORD')).toBeVisible()
   await expect(page.getByLabel('Stage performance')).toContainText(
-    'Commands3Wrong Answers0Hints0',
+    'Commands3Wrong Answers0Hints1',
   )
 
   await page.getByRole('link', { name: '学習レビューへ' }).click()

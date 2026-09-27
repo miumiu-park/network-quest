@@ -37,6 +37,8 @@ import { BattleProgress } from './BattleProgress'
 import styles from './DnsSlimeBattle.module.css'
 import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
+import { ProgressiveHints } from './ProgressiveHints'
+import { useProgressiveHints } from './useProgressiveHints'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === IP_SLIME_SCENARIO.answer.cause,
@@ -81,6 +83,7 @@ export function IpSlimeBattle() {
     battleEngine.createInitialState,
   )
   const [history] = useState(() => createInvestigationHistory())
+  const hints = useProgressiveHints(IP_SLIME_SCENARIO.hints)
   const [message, setMessage] = useState(
     '現在のinterface設定を確認し、Gatewayへの到達性を調査してください。',
   )
@@ -168,6 +171,7 @@ export function IpSlimeBattle() {
           scenario: IP_SLIME_SCENARIO,
           battleState,
           commandCount: history.getEntries().length,
+          hintCount: hints.progress.hintCount,
         }),
         learningReview: createLearningReview(
           IP_SLIME_SCENARIO,
@@ -188,6 +192,10 @@ export function IpSlimeBattle() {
       </header>
 
       <BattleProgress state={battleState} />
+      <ProgressiveHints
+        {...hints}
+        totalHintCount={IP_SLIME_SCENARIO.hints.length}
+      />
 
       <div className={styles.battleGrid}>
         <section className={styles.enemyPane} aria-label="Enemy">
