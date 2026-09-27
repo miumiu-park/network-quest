@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
+import { createInitialGameState } from '../game'
 import { LanVillage } from './LanVillage'
 
 function renderVillage() {
@@ -65,7 +66,12 @@ describe('LAN Village', () => {
   it('derives clear and next-recommendation status from completed scenarios', () => {
     render(
       <MemoryRouter>
-        <LanVillage completedScenarios={['ip-slime']} />
+        <LanVillage
+          player={{
+            ...createInitialGameState().player,
+            completedScenarios: ['ip-slime'],
+          }}
+        />
       </MemoryRouter>,
     )
 

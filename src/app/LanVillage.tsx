@@ -6,11 +6,15 @@ import {
   getScenarioGuide,
   type ScenarioId,
 } from '../scenario'
+import { createInitialGameState, type PlayerState } from '../game'
 import styles from './LanVillage.module.css'
+import { PlayerStatus } from './PlayerStatus'
 
 interface LanVillageProps {
-  readonly completedScenarios?: readonly ScenarioId[]
+  readonly player?: PlayerState
 }
+
+const INITIAL_PLAYER = createInitialGameState().player
 
 interface VillageEntity {
   readonly id: string
@@ -51,7 +55,8 @@ const VILLAGE_ENTITIES: readonly VillageEntity[] = [
   })),
 ]
 
-export function LanVillage({ completedScenarios = [] }: LanVillageProps) {
+export function LanVillage({ player = INITIAL_PLAYER }: LanVillageProps) {
+  const completedScenarios = player.completedScenarios
   const [selectedId, setSelectedId] = useState('npc')
   const selected =
     VILLAGE_ENTITIES.find((entity) => entity.id === selectedId) ??
@@ -83,6 +88,8 @@ export function LanVillage({ completedScenarios = [] }: LanVillageProps) {
           Network Online
         </div>
       </header>
+
+      <PlayerStatus player={player} scenarioCount={SCENARIO_GUIDES.length} />
 
       <section className={styles.onboarding} aria-labelledby="quest-loop-title">
         <div>

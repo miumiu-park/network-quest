@@ -215,7 +215,7 @@ export function AppRoutes() {
       />
       <Route
         path={APP_ROUTES.village}
-        element={<LanVillage completedScenarios={player.completedScenarios} />}
+        element={<LanVillage player={player} />}
       />
       <Route path={APP_ROUTES.event} element={<EventRoute />} />
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />

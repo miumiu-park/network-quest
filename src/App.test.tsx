@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { APP_ROUTES } from './app/routes'
+import { PLAYER_PROGRESS_STORAGE_KEY } from './storage'
 
 function renderRoute(route: string) {
   return render(
@@ -12,6 +13,8 @@ function renderRoute(route: string) {
     </MemoryRouter>,
   )
 }
+
+afterEach(() => localStorage.clear())
 
 describe('App routing', () => {
   it('defines every application URL', () => {
@@ -31,6 +34,29 @@ describe('App routing', () => {
     expect(
       screen.getByRole('heading', { name: 'LAN Village' }),
     ).toBeInTheDocument()
+  })
+
+  it('restores the Player Status from saved progress', () => {
+    localStorage.setItem(
+      PLAYER_PROGRESS_STORAGE_KEY,
+      JSON.stringify({
+        version: 2,
+        level: 2,
+        exp: 100,
+        completedScenarios: ['ip-slime'],
+        unlockedCommands: [],
+        bestRanks: { 'ip-slime': 'A' },
+      }),
+    )
+
+    renderRoute('/village')
+
+    expect(
+      screen.getByRole('region', { name: 'Network Adventurer' }),
+    ).toHaveTextContent('Level2Experience100 / 300 EXP')
+    expect(screen.getByRole('button', { name: /IP Slime/ })).toHaveTextContent(
+      'クリア済み',
+    )
   })
 
   it.each([
