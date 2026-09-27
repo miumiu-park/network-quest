@@ -39,6 +39,7 @@ import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import { ProgressiveHints } from './ProgressiveHints'
 import { useProgressiveHints } from './useProgressiveHints'
+import { useNetworkDiagramFeedback } from './useNetworkDiagramFeedback'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === IP_SLIME_SCENARIO.answer.cause,
@@ -84,6 +85,9 @@ export function IpSlimeBattle() {
   )
   const [history] = useState(() => createInvestigationHistory())
   const hints = useProgressiveHints(IP_SLIME_SCENARIO.hints)
+  const { feedback, recordObservations } = useNetworkDiagramFeedback(
+    IP_SLIME_SCENARIO.topology,
+  )
   const [message, setMessage] = useState(
     '現在のinterface設定を確認し、Gatewayへの到達性を調査してください。',
   )
@@ -108,6 +112,7 @@ export function IpSlimeBattle() {
       const entry = history.getEntries().at(-1)
 
       if (entry !== undefined) {
+        recordObservations(entry.observations)
         setBattleState((currentState) => {
           const investigatedState = applyInvestigationObservations(
             battleEngine,
@@ -134,7 +139,7 @@ export function IpSlimeBattle() {
 
       return result
     }
-  }, [history, networkState])
+  }, [history, networkState, recordObservations])
 
   function submitCause(answer: CauseAnswer) {
     setBattleState((currentState) =>
@@ -272,6 +277,7 @@ export function IpSlimeBattle() {
           </div>
           <NetworkDiagram
             topology={IP_SLIME_SCENARIO.topology}
+            feedback={feedback}
             details={[
               { label: 'IP Address', value: networkState.client.ipAddress },
               { label: 'Subnet', value: networkState.client.subnetMask },

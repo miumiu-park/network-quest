@@ -43,6 +43,7 @@ import { NetworkDiagram } from './NetworkDiagram'
 import { APP_ROUTES } from './routes'
 import { ProgressiveHints } from './ProgressiveHints'
 import { useProgressiveHints } from './useProgressiveHints'
+import { useNetworkDiagramFeedback } from './useNetworkDiagramFeedback'
 
 const scenarioCause = CAUSE_ANSWER_OPTIONS.find(
   (cause) => cause === SUBNET_GOLEM_SCENARIO.answer.cause,
@@ -91,6 +92,9 @@ export function SubnetGolemBattle() {
   )
   const [history] = useState(() => createInvestigationHistory())
   const hints = useProgressiveHints(SUBNET_GOLEM_SCENARIO.hints)
+  const { feedback, recordObservations } = useNetworkDiagramFeedback(
+    SUBNET_GOLEM_SCENARIO.topology,
+  )
   const verifiedTargets = useRef(new Set<string>())
   const [message, setMessage] = useState(
     'interface設定を確認し、2台のLAN端末への到達性を比較してください。',
@@ -116,6 +120,7 @@ export function SubnetGolemBattle() {
       const entry = history.getEntries().at(-1)
 
       if (entry !== undefined) {
+        recordObservations(entry.observations)
         setBattleState((currentState) => {
           const investigatedState = applyInvestigationObservations(
             battleEngine,
@@ -153,7 +158,7 @@ export function SubnetGolemBattle() {
 
       return result
     }
-  }, [history, networkState])
+  }, [history, networkState, recordObservations])
 
   function submitCause(answer: CauseAnswer) {
     setBattleState((currentState) =>
@@ -294,6 +299,7 @@ export function SubnetGolemBattle() {
           </div>
           <NetworkDiagram
             topology={SUBNET_GOLEM_SCENARIO.topology}
+            feedback={feedback}
             details={[
               { label: 'Admin PC', value: networkState.client.ipAddress },
               { label: 'Subnet Mask', value: networkState.client.subnetMask },

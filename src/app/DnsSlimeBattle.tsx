@@ -42,6 +42,7 @@ import { BattleProgress } from './BattleProgress'
 import { NetworkDiagram } from './NetworkDiagram'
 import { ProgressiveHints } from './ProgressiveHints'
 import { useProgressiveHints } from './useProgressiveHints'
+import { useNetworkDiagramFeedback } from './useNetworkDiagramFeedback'
 import { APP_ROUTES } from './routes'
 import styles from './DnsSlimeBattle.module.css'
 
@@ -95,6 +96,9 @@ export function DnsSlimeBattle() {
   )
   const [history] = useState(() => createInvestigationHistory())
   const hints = useProgressiveHints(DNS_SLIME_SCENARIO.hints)
+  const { feedback, recordObservations } = useNetworkDiagramFeedback(
+    DNS_SLIME_SCENARIO.topology,
+  )
   const [message, setMessage] = useState(
     'Terminalでgateway、外部IP、DNSの順に調査してください。',
   )
@@ -119,6 +123,7 @@ export function DnsSlimeBattle() {
       const entry = history.getEntries().at(-1)
 
       if (entry !== undefined) {
+        recordObservations(entry.observations)
         setBattleState((currentState) => {
           const investigatedState = applyInvestigationObservations(
             battleEngine,
@@ -146,7 +151,7 @@ export function DnsSlimeBattle() {
 
       return result
     }
-  }, [history, networkState])
+  }, [history, networkState, recordObservations])
 
   function submitCause(answer: CauseAnswer) {
     setBattleState((currentState) =>
@@ -291,6 +296,7 @@ export function DnsSlimeBattle() {
           </div>
           <NetworkDiagram
             topology={DNS_SLIME_SCENARIO.topology}
+            feedback={feedback}
             details={[
               { label: 'Client DNS', value: configuredDns },
               { label: 'Subnet', value: networkState.client.subnetMask },

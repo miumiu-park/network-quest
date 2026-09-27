@@ -19,6 +19,9 @@ describe('IP Slime playable scenario', () => {
 
     await user.type(terminal, 'ping gateway{enter}')
     expect(screen.getByText(/Request timed out/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Gateway (gateway): 通信失敗')
 
     await user.click(screen.getByRole('button', { name: 'IP Address' }))
     expect(screen.getByText('Weakness Found')).toBeInTheDocument()
@@ -34,6 +37,9 @@ describe('IP Slime playable scenario', () => {
 
     await user.type(terminal, 'ping gateway{enter}')
     expect(screen.getByText('Stage Clear')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Gateway (gateway): 通信成功')
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
     expect(

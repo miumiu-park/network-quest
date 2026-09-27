@@ -28,6 +28,9 @@ describe('Gateway Goblin playable scenario', () => {
 
     await user.type(terminal, 'ping 203.0.113.20{enter}')
     expect(screen.getByText(/Request timed out/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Target (203.0.113.20): 通信失敗')
 
     await user.click(screen.getByRole('button', { name: 'Gateway' }))
     expect(screen.getByText('Weakness Found')).toBeInTheDocument()
@@ -42,6 +45,9 @@ describe('Gateway Goblin playable scenario', () => {
 
     await user.type(terminal, 'ping 203.0.113.20{enter}')
     expect(screen.getByText('Stage Clear')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('Target (203.0.113.20): 通信成功')
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
     expect(

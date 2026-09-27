@@ -51,6 +51,9 @@ describe('DNS Slime playable scenario', () => {
 
     await user.type(terminal, 'nslookup quest.example{enter}')
     expect(screen.getByText(/configured DNS server/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('DNS (quest.example): 通信失敗')
 
     await user.click(screen.getByRole('button', { name: 'DNS' }))
     expect(screen.getByText(/正解です/)).toBeInTheDocument()
@@ -73,6 +76,9 @@ describe('DNS Slime playable scenario', () => {
 
     await user.type(terminal, 'nslookup quest.example{enter}')
     expect(screen.getByText('Stage Clear')).toBeInTheDocument()
+    expect(
+      screen.getByRole('region', { name: '通信経路の調査結果' }),
+    ).toHaveTextContent('DNS (quest.example): 通信成功')
     expect(
       screen.getByRole('heading', { name: 'DNS Slime 撃破！' }),
     ).toBeInTheDocument()
