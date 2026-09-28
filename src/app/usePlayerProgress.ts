@@ -2,10 +2,11 @@ import { useCallback, useRef, useState } from 'react'
 import {
   createInitialGameState,
   recordScenarioProgress,
+  unlockAchievements,
   type StageResult,
   type PlayerState,
 } from '../game'
-import { getScenarioGuide } from '../scenario'
+import { getScenarioGuide, SCENARIO_GUIDES } from '../scenario'
 import {
   createLocalStoragePlayerProgressRepository,
   type PlayerProgressRepository,
@@ -45,12 +46,23 @@ export function usePlayerProgress(
         guide.scenario.reward,
         result.rank,
       )
-      if (progressResult.player !== playerRef.current) {
-        repository.save(progressResult.player)
-        playerRef.current = progressResult.player
-        setPlayer(progressResult.player)
+      const achievementResult = unlockAchievements(
+        progressResult.player,
+        result,
+        SCENARIO_GUIDES.map((scenarioGuide) => scenarioGuide.scenario.id),
+      )
+      const finalPlayer = achievementResult.player
+      if (finalPlayer !== playerRef.current) {
+        repository.save(finalPlayer)
+        playerRef.current = finalPlayer
+        setPlayer(finalPlayer)
       }
-      return createStageClearResult(result, progressResult, guide)
+      return createStageClearResult(
+        result,
+        { ...progressResult, player: finalPlayer },
+        guide,
+        achievementResult.newlyUnlocked,
+      )
     },
     [repository],
   )

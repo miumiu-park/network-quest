@@ -28,6 +28,13 @@ const levelUpResult: StageClearResultModel = {
     'nslookupで名前解決を確認する。',
   ],
   keyCommands: ['ip', 'ping', 'nslookup'],
+  newAchievements: [
+    {
+      id: 'first-troubleshooter',
+      name: 'First Troubleshooter',
+      description: '初めてScenarioをクリアする。',
+    },
+  ],
 }
 
 describe('StageClearResult', () => {
@@ -51,6 +58,10 @@ describe('StageClearResult', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Lv.1 → Lv.2')).toBeInTheDocument()
     expect(
+      screen.getByRole('heading', { name: 'Achievement Unlocked!' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('First Troubleshooter')).toBeInTheDocument()
+    expect(
       screen.getByRole('heading', {
         name: '今回学んだテーマ: Name Resolution',
       }),
@@ -72,6 +83,7 @@ describe('StageClearResult', () => {
             previousLevel: 2,
             currentLevel: 2,
             didLevelUp: false,
+            newAchievements: [],
           }}
           learningState={{}}
         />

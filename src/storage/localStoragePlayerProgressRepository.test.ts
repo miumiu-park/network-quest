@@ -25,6 +25,7 @@ function createPlayer(exp = 100): PlayerState {
     completedScenarios: ['dns-slime'],
     unlockedCommands: ['ping', 'nslookup'],
     bestRanks: { 'dns-slime': 'A' },
+    unlockedAchievements: ['first-troubleshooter'],
   }
 }
 
@@ -37,12 +38,13 @@ describe('LocalStorage PlayerProgressRepository', () => {
     expect(
       JSON.parse(storage.getItem(PLAYER_PROGRESS_STORAGE_KEY) ?? ''),
     ).toEqual({
-      version: 2,
+      version: 3,
       level: 2,
       exp: 100,
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
       bestRanks: { 'dns-slime': 'A' },
+      unlockedAchievements: ['first-troubleshooter'],
     })
   })
 
@@ -63,6 +65,7 @@ describe('LocalStorage PlayerProgressRepository', () => {
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
       bestRanks: { 'dns-slime': 'A' },
+      unlockedAchievements: ['first-troubleshooter'],
     })
     expect(Object.isFrozen(restored)).toBe(true)
     expect(Object.isFrozen(restored?.completedScenarios)).toBe(true)
@@ -90,6 +93,29 @@ describe('LocalStorage PlayerProgressRepository', () => {
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
       bestRanks: {},
+      unlockedAchievements: [],
+    })
+  })
+
+  it('migrates version 2 progress with an empty Achievement collection', () => {
+    const storage = new MemoryStorage()
+    storage.setItem(
+      PLAYER_PROGRESS_STORAGE_KEY,
+      JSON.stringify({
+        version: 2,
+        level: 2,
+        exp: 100,
+        completedScenarios: ['dns-slime'],
+        unlockedCommands: ['ping'],
+        bestRanks: { 'dns-slime': 'A' },
+      }),
+    )
+
+    expect(
+      createLocalStoragePlayerProgressRepository(storage).load(),
+    ).toMatchObject({
+      bestRanks: { 'dns-slime': 'A' },
+      unlockedAchievements: [],
     })
   })
 

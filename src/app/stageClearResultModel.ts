@@ -1,4 +1,8 @@
-import type { ScenarioProgressResult, StageResult } from '../game'
+import type {
+  AchievementDefinition,
+  ScenarioProgressResult,
+  StageResult,
+} from '../game'
 import type { ScenarioGuide } from '../scenario'
 
 export interface StageClearResult {
@@ -18,6 +22,7 @@ export interface StageClearResult {
   readonly learningSummary: string
   readonly learningKeyPoints: readonly string[]
   readonly keyCommands: readonly string[]
+  readonly newAchievements: readonly AchievementDefinition[]
 }
 
 export function matchesScenarioGuide(
@@ -35,6 +40,7 @@ export function createStageClearResult(
   result: StageResult,
   progress: ScenarioProgressResult,
   guide: ScenarioGuide,
+  newAchievements: readonly AchievementDefinition[] = [],
 ): StageClearResult {
   return Object.freeze({
     scenarioId: guide.scenario.id,
@@ -53,5 +59,6 @@ export function createStageClearResult(
     learningSummary: guide.scenario.learning.summary,
     learningKeyPoints: guide.scenario.learning.keyPoints,
     keyCommands: guide.keyCommands,
+    newAchievements: Object.freeze([...newAchievements]),
   })
 }

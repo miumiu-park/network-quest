@@ -22,3 +22,13 @@ export type {
   PlayerState,
   ScenarioId,
 } from './gameState'
+export {
+  ACHIEVEMENTS,
+  ACHIEVEMENT_IDS,
+  unlockAchievements,
+} from './achievement'
+export type {
+  AchievementDefinition,
+  AchievementId,
+  AchievementUnlockResult,
+} from './achievement'

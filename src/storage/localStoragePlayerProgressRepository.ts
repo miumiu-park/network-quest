@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import type { PlayerState } from '../game'
+import { ACHIEVEMENT_IDS, type PlayerState } from '../game'
 import { createProgressionState, STAGE_RANKS } from '../progression'
 import type { PlayerProgressRepository } from './playerProgressRepository'
 
 export const PLAYER_PROGRESS_STORAGE_KEY = 'network-quest:player-progress'
 
-const PLAYER_PROGRESS_VERSION = 2
+const PLAYER_PROGRESS_VERSION = 3
 const nonEmptyString = z.string().trim().min(1)
 const nonNegativeSafeInteger = z
   .number()
@@ -30,16 +30,24 @@ const storedPlayerProgressV1Schema = baseStoredPlayerProgressSchema.extend({
 })
 
 const storedPlayerProgressV2Schema = baseStoredPlayerProgressSchema.extend({
-  version: z.literal(PLAYER_PROGRESS_VERSION),
+  version: z.literal(2),
   bestRanks: z.record(
     nonEmptyString.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     z.enum(STAGE_RANKS),
   ),
 })
 
+const storedPlayerProgressV3Schema = storedPlayerProgressV2Schema.extend({
+  version: z.literal(PLAYER_PROGRESS_VERSION),
+  unlockedAchievements: z
+    .array(z.enum(ACHIEVEMENT_IDS))
+    .refine((values) => new Set(values).size === values.length),
+})
+
 const storedPlayerProgressSchema = z.discriminatedUnion('version', [
   storedPlayerProgressV1Schema,
   storedPlayerProgressV2Schema,
+  storedPlayerProgressV3Schema,
 ])
 
 export interface PlayerProgressStorage {
@@ -69,9 +77,13 @@ export function createLocalStoragePlayerProgressRepository(
           completedScenarios: result.data.completedScenarios,
           unlockedCommands: result.data.unlockedCommands,
           bestRanks:
-            result.data.version === 2
-              ? result.data.bestRanks
-              : Object.freeze({}),
+            result.data.version === 1
+              ? Object.freeze({})
+              : result.data.bestRanks,
+          unlockedAchievements:
+            result.data.version === 3
+              ? result.data.unlockedAchievements
+              : Object.freeze([]),
         })
       } catch {
         return null
@@ -94,6 +106,7 @@ export function createLocalStoragePlayerProgressRepository(
           completedScenarios: player.completedScenarios,
           unlockedCommands: player.unlockedCommands,
           bestRanks: player.bestRanks,
+          unlockedAchievements: player.unlockedAchievements,
         })
         if (!result.success) return false
 
@@ -115,5 +128,6 @@ function freezePlayerState(player: PlayerState): PlayerState {
     completedScenarios: Object.freeze([...player.completedScenarios]),
     unlockedCommands: Object.freeze([...player.unlockedCommands]),
     bestRanks: Object.freeze({ ...player.bestRanks }),
+    unlockedAchievements: Object.freeze([...player.unlockedAchievements]),
   })
 }

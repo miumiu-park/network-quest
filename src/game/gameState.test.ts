@@ -27,6 +27,7 @@ describe('GameState', () => {
         completedScenarios: [],
         unlockedCommands: [],
         bestRanks: {},
+        unlockedAchievements: [],
       },
       battleState: null,
     })

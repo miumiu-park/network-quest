@@ -92,6 +92,12 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   ).toBeVisible()
   await expect(page.getByLabel('Stage Rank A')).toBeVisible()
   await expect(page.getByText('NEW RECORD')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Achievement Unlocked!' }),
+  ).toBeVisible()
+  await expect(page.getByText('First Troubleshooter')).toBeVisible()
+  await expect(page.getByText('Perfect Diagnosis')).toBeVisible()
+  await expect(page.getByText('Efficient Engineer')).toBeVisible()
   await expect(page.getByLabel('Stage performance')).toContainText(
     'Commands6Wrong Answers0Hints1',
   )
@@ -121,6 +127,7 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   await expect(page.getByRole('button', { name: /DNS Slime/ })).toContainText(
     'クリア済み',
   )
+  await expect(page.getByLabel('Achievement解除数')).toContainText('3 / 5')
 
   await page.getByRole('link', { name: 'Network / Monster図鑑を見る' }).click()
   await expect(page).toHaveURL(/\/codex$/)
