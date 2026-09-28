@@ -47,11 +47,13 @@ describe('Subnet Golem playable Boss scenario', () => {
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
     expect(
-      screen.getByRole('heading', { name: 'Subnet Golem 撃破' }),
+      screen.getByRole('heading', { name: 'Subnet Golem 撃破！' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('獲得EXP: 180')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: '+180 EXP' }),
+    ).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: '学習レビューへ' }))
+    await user.click(screen.getByRole('link', { name: '学習レビューへ進む' }))
     expect(screen.getByRole('region', { name: '原因' })).toHaveTextContent(
       'SUBNET_MASK',
     )

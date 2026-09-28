@@ -12,6 +12,7 @@ export interface ScenarioGuide {
   readonly difficulty: ScenarioDifficulty
   readonly icon: string
   readonly encounter: 'BATTLE' | 'BOSS'
+  readonly keyCommands: readonly string[]
 }
 
 export const SCENARIO_GUIDES: readonly ScenarioGuide[] = Object.freeze([
@@ -21,6 +22,7 @@ export const SCENARIO_GUIDES: readonly ScenarioGuide[] = Object.freeze([
     difficulty: '初級',
     icon: '🟢',
     encounter: 'BATTLE',
+    keyCommands: Object.freeze(['ip']),
   },
   {
     scenario: GATEWAY_GOBLIN_SCENARIO,
@@ -28,6 +30,7 @@ export const SCENARIO_GUIDES: readonly ScenarioGuide[] = Object.freeze([
     difficulty: '初級',
     icon: '👺',
     encounter: 'BATTLE',
+    keyCommands: Object.freeze(['ip', 'ping']),
   },
   {
     scenario: DNS_SLIME_SCENARIO,
@@ -35,6 +38,7 @@ export const SCENARIO_GUIDES: readonly ScenarioGuide[] = Object.freeze([
     difficulty: '中級',
     icon: '🦠',
     encounter: 'BATTLE',
+    keyCommands: Object.freeze(['ip', 'ping', 'nslookup']),
   },
   {
     scenario: SUBNET_GOLEM_SCENARIO,
@@ -42,6 +46,7 @@ export const SCENARIO_GUIDES: readonly ScenarioGuide[] = Object.freeze([
     difficulty: '上級',
     icon: '🗿',
     encounter: 'BOSS',
+    keyCommands: Object.freeze(['ip', 'ping']),
   },
 ])
 

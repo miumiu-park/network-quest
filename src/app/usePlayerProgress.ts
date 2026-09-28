@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react'
 import {
   createInitialGameState,
   recordScenarioProgress,
-  type ScenarioProgressResult,
   type StageResult,
   type PlayerState,
 } from '../game'
@@ -11,12 +10,15 @@ import {
   createLocalStoragePlayerProgressRepository,
   type PlayerProgressRepository,
 } from '../storage'
+import {
+  createStageClearResult,
+  matchesScenarioGuide,
+  type StageClearResult,
+} from './stageClearResultModel'
 
 export interface PlayerProgressController {
   readonly player: PlayerState
-  readonly recordStageResult: (
-    result: StageResult,
-  ) => ScenarioProgressResult | null
+  readonly recordStageResult: (result: StageResult) => StageClearResult | null
 }
 
 export function usePlayerProgress(
@@ -33,7 +35,9 @@ export function usePlayerProgress(
   const recordStageResult = useCallback(
     (result: StageResult) => {
       const guide = getScenarioGuide(result.scenarioId)
-      if (guide === undefined) return null
+      if (guide === undefined || !matchesScenarioGuide(result, guide)) {
+        return null
+      }
 
       const progressResult = recordScenarioProgress(
         playerRef.current,
@@ -46,7 +50,7 @@ export function usePlayerProgress(
         playerRef.current = progressResult.player
         setPlayer(progressResult.player)
       }
-      return progressResult
+      return createStageClearResult(result, progressResult, guide)
     },
     [repository],
   )
