@@ -25,6 +25,7 @@ describe('App routing', () => {
       battle: '/battle/:scenarioId',
       result: '/result',
       learning: '/learning',
+      codex: '/codex',
     })
   })
 
@@ -67,6 +68,7 @@ describe('App routing', () => {
     ['/event/subnet-golem', 'NPC Event'],
     ['/result', 'Result'],
     ['/learning', 'Learning'],
+    ['/codex', 'Network / Monster図鑑'],
   ])('renders %s as the %s screen', (route, heading) => {
     renderRoute(route)
 

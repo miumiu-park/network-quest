@@ -1,0 +1,214 @@
+.screen {
+  box-sizing: border-box;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 40px;
+  text-align: left;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  width: min(100%, 1020px);
+}
+
+.header h1 {
+  margin: 5px 0 8px;
+}
+
+.eyebrow,
+.state,
+.number {
+  margin: 0;
+  color: var(--accent);
+  font: 800 0.72rem/1.4 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.completion {
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: var(--accent-bg);
+  padding: 9px 15px;
+  font-family: var(--mono);
+}
+
+.completion strong {
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  width: min(100%, 1020px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.registered,
+.unknown {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+}
+
+.unknown {
+  border-style: dashed;
+  background: var(--social-bg);
+}
+
+.cardHeading {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 18px;
+}
+
+.number {
+  align-self: start;
+  color: var(--text);
+}
+
+.icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--accent-bg);
+  font-size: 1.75rem;
+}
+
+.cardHeading h2 {
+  margin: 3px 0 0;
+  font-size: 1.25rem;
+}
+
+.rank {
+  display: grid;
+  margin: 0;
+  text-align: center;
+}
+
+.rank span {
+  color: var(--text);
+  font: 700 0.6rem/1.4 var(--mono);
+}
+
+.rank strong {
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.knowledge {
+  display: grid;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding: 18px;
+}
+
+.knowledge dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.knowledge dl div {
+  display: grid;
+  gap: 4px;
+}
+
+.knowledge dt,
+.knowledge h3 {
+  color: var(--text);
+  font: 700 0.7rem/1.4 var(--mono);
+  text-transform: uppercase;
+}
+
+.knowledge dd {
+  margin: 0;
+  color: var(--text-h);
+}
+
+.knowledge h3 {
+  margin: 0 0 8px;
+}
+
+.commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.commands code {
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  background: var(--accent-bg);
+  padding: 5px 8px;
+}
+
+.knowledge ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.lockedMessage {
+  min-height: 74px;
+  margin: 0;
+  border-top: 1px dashed var(--border);
+  padding: 18px;
+  color: var(--text);
+}
+
+.returnLink {
+  align-self: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 18px;
+  color: var(--text-h);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.returnLink:focus-visible {
+  outline: 3px solid var(--accent-border);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .screen {
+    padding: 24px 16px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardHeading {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .number {
+    grid-column: 1 / -1;
+  }
+}

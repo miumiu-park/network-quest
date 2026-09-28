@@ -41,6 +41,9 @@ describe('LAN Village', () => {
     expect(
       screen.getByRole('link', { name: 'IP Slimeから始める' }),
     ).toHaveAttribute('href', '/event/ip-slime')
+    expect(
+      screen.getByRole('link', { name: 'Network / Monster図鑑を見る' }),
+    ).toHaveAttribute('href', '/codex')
   })
 
   it('shows the game loop and beginner recommendation metadata', async () => {
