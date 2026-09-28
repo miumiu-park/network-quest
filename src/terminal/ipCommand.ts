@@ -1,15 +1,13 @@
 import type { CommandHandler } from './commandExecutor'
 import type { NetworkSimulator } from '../network/networkSimulator'
+import { createUsageError } from './commandMetadata'
 
 export function createIpCommandHandler(
   provider: Pick<NetworkSimulator, 'getInterfaceInfo'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 0) {
-      return {
-        kind: 'error',
-        text: 'usage: ip',
-      }
+      return createUsageError('ip')
     }
 
     const info = provider.getInterfaceInfo()

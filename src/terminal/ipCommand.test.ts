@@ -60,7 +60,7 @@ describe('createIpCommandHandler', () => {
 
     expect(handler(['addr'])).toEqual({
       kind: 'error',
-      text: 'usage: ip',
+      text: 'usage: ip\nRun "help ip" for details.',
     })
     expect(provider.getInterfaceInfo).not.toHaveBeenCalled()
   })

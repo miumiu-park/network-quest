@@ -103,7 +103,7 @@ describe('createNslookupCommandHandler', () => {
 
       expect(handler(args)).toEqual({
         kind: 'error',
-        text: 'usage: nslookup <hostname>',
+        text: 'usage: nslookup <hostname>\nRun "help nslookup" for details.',
       })
       expect(simulator.simulateNslookup).not.toHaveBeenCalled()
     },

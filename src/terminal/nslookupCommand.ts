@@ -1,15 +1,13 @@
 import type { CommandHandler } from './commandExecutor'
 import type { NetworkSimulator } from '../network/networkSimulator'
+import { createUsageError } from './commandMetadata'
 
 export function createNslookupCommandHandler(
   simulator: Pick<NetworkSimulator, 'simulateNslookup'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 1) {
-      return {
-        kind: 'error',
-        text: 'usage: nslookup <hostname>',
-      }
+      return createUsageError('nslookup')
     }
 
     const [hostname] = args

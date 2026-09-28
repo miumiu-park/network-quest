@@ -1,15 +1,13 @@
 import type { CommandHandler } from './commandExecutor'
 import type { NetworkSimulator } from '../network/networkSimulator'
+import { createUsageError } from './commandMetadata'
 
 export function createPingCommandHandler(
   simulator: Pick<NetworkSimulator, 'simulatePing'>,
 ): CommandHandler {
   return (args) => {
     if (args.length !== 1) {
-      return {
-        kind: 'error',
-        text: 'usage: ping <target>',
-      }
+      return createUsageError('ping')
     }
 
     const [target] = args

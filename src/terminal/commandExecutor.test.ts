@@ -23,7 +23,7 @@ describe('createCommandExecutor', () => {
 
     expect(execute({ command: 'reboot', args: [] })).toEqual({
       kind: 'error',
-      text: 'command not found: reboot',
+      text: 'command not found: reboot\nRun "help" to list available commands.',
     })
     expect(pingHandler).not.toHaveBeenCalled()
   })
@@ -33,8 +33,19 @@ describe('createCommandExecutor', () => {
 
     expect(execute({ command: 'constructor', args: [] })).toEqual({
       kind: 'error',
-      text: 'command not found: constructor',
+      text: 'command not found: constructor\nRun "help" to list available commands.',
     })
+  })
+
+  it('handles help as an internal safe command before registered handlers', () => {
+    const pingHandler = vi.fn<CommandHandler>()
+    const execute = createCommandExecutor({ ping: pingHandler })
+
+    expect(execute({ command: 'help', args: ['ping'] })).toMatchObject({
+      kind: 'output',
+      text: expect.stringContaining('Usage: ping <target>'),
+    })
+    expect(pingHandler).not.toHaveBeenCalled()
   })
 
   it('invokes only the handler registered for the requested command', () => {

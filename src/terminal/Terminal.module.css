@@ -91,6 +91,19 @@
   border-top: 1px solid #2d6a4f;
 }
 
+.keyboardHint {
+  margin: 0;
+  border-top: 1px solid #2d6a4f;
+  background: #0b1d13;
+  padding: 8px 14px 0;
+  color: #95d5b2;
+  font-size: 0.68rem;
+}
+
+.keyboardHint + .form {
+  border-top: 0;
+}
+
 .label {
   color: #52b788;
   font-weight: 700;
