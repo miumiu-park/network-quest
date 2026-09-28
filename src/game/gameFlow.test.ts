@@ -150,6 +150,9 @@ describe('transitionGameState', () => {
     expect(improved).toMatchObject({
       expAwarded: 0,
       isNewBestRank: true,
+      isFirstClear: false,
+      previousLevel: 2,
+      currentLevel: 2,
       player: { exp: 100, bestRanks: { [DUMMY_SCENARIO_ID]: 'A' } },
     })
 
@@ -164,6 +167,22 @@ describe('transitionGameState', () => {
       isNewBestRank: false,
     })
     expect(worse.player).toBe(improved.player)
+  })
+
+  it('returns the player level before and after a first-clear reward', () => {
+    const result = recordScenarioProgress(
+      createInitialGameState().player,
+      DUMMY_SCENARIO_ID,
+      { exp: 100 },
+      'A',
+    )
+
+    expect(result).toMatchObject({
+      expAwarded: 100,
+      isFirstClear: true,
+      previousLevel: 1,
+      currentLevel: 2,
+    })
   })
 })
 

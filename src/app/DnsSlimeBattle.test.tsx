@@ -84,9 +84,13 @@ describe('DNS Slime playable scenario', () => {
     ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
-    expect(screen.getByRole('heading', { name: 'Result' })).toBeInTheDocument()
-    expect(screen.getByText('獲得EXP: 100')).toBeInTheDocument()
-    expect(screen.getByText('Rank: S')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'DNS Slime 撃破！' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: '+100 EXP' }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Stage Rank S')).toBeInTheDocument()
     expect(screen.getByText('Commands').nextElementSibling).toHaveTextContent(
       '4',
     )
@@ -96,7 +100,7 @@ describe('DNS Slime playable scenario', () => {
     expect(screen.getByText('Hints').nextElementSibling).toHaveTextContent('0')
     expect(await screen.findByText('NEW RECORD')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: '学習レビューへ' }))
+    await user.click(screen.getByRole('link', { name: '学習レビューへ進む' }))
     expect(
       screen.getByRole('heading', { name: 'Learning Review' }),
     ).toBeInTheDocument()

@@ -8,11 +8,7 @@ import {
   useParams,
 } from 'react-router-dom'
 import type { LearningReview as LearningReviewModel } from '../learning'
-import {
-  parseStageResult,
-  type ScenarioProgressResult,
-  type StageResult,
-} from '../game'
+import { parseStageResult, type StageResult } from '../game'
 import type { ScenarioId } from '../scenario'
 import {
   DNS_SLIME_SCENARIO,
@@ -24,6 +20,8 @@ import { DnsSlimeBattle } from './DnsSlimeBattle'
 import { GatewayGoblinBattle } from './GatewayGoblinBattle'
 import { IpSlimeBattle } from './IpSlimeBattle'
 import { SubnetGolemBattle } from './SubnetGolemBattle'
+import { StageClearResult } from './StageClearResult'
+import type { StageClearResult as StageClearResultModel } from './stageClearResultModel'
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
@@ -110,15 +108,16 @@ function EventRoute() {
 interface ResultRouteProps {
   readonly recordStageResult: (
     result: StageResult,
-  ) => ScenarioProgressResult | null
+  ) => StageClearResultModel | null
 }
 
 function ResultRoute({ recordStageResult }: ResultRouteProps) {
   const location = useLocation()
   const result = getStageResult(location.state)
   const processed = useRef(false)
-  const [progressResult, setProgressResult] =
-    useState<ScenarioProgressResult | null>(null)
+  const [progressResult, setProgressResult] = useState<
+    StageClearResultModel | null | undefined
+  >(undefined)
 
   useEffect(() => {
     if (result === null || processed.current) return
@@ -135,30 +134,25 @@ function ResultRoute({ recordStageResult }: ResultRouteProps) {
     )
   }
 
+  if (progressResult === undefined) {
+    return (
+      <Screen title="Result">
+        <p>Stage結果を集計しています...</p>
+      </Screen>
+    )
+  }
+
+  if (progressResult === null) {
+    return (
+      <Screen title="Result">
+        <p>Stage結果とScenario Dataの整合性を確認できませんでした。</p>
+        <Link to={APP_ROUTES.village}>LAN Villageへ戻る</Link>
+      </Screen>
+    )
+  }
+
   return (
-    <Screen title="Result">
-      <h2>{result.enemyName} 撃破</h2>
-      <p>Rank: {result.rank}</p>
-      {progressResult?.isNewBestRank === true && <p>NEW RECORD</p>}
-      <dl aria-label="Stage performance">
-        <div>
-          <dt>Commands</dt>
-          <dd>{result.performance.commandCount}</dd>
-        </div>
-        <div>
-          <dt>Wrong Answers</dt>
-          <dd>{result.performance.incorrectAnswerCount}</dd>
-        </div>
-        <div>
-          <dt>Hints</dt>
-          <dd>{result.performance.hintCount}</dd>
-        </div>
-      </dl>
-      <p>獲得EXP: {progressResult?.expAwarded ?? result.exp}</p>
-      <Link to={APP_ROUTES.learning} state={location.state}>
-        学習レビューへ
-      </Link>
-    </Screen>
+    <StageClearResult result={progressResult} learningState={location.state} />
   )
 }
 

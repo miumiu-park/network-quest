@@ -43,11 +43,13 @@ describe('IP Slime playable scenario', () => {
 
     await user.click(screen.getByRole('button', { name: 'Resultへ' }))
     expect(
-      screen.getByRole('heading', { name: 'IP Slime 撃破' }),
+      screen.getByRole('heading', { name: 'IP Slime 撃破！' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('獲得EXP: 100')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: '+100 EXP' }),
+    ).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: '学習レビューへ' }))
+    await user.click(screen.getByRole('link', { name: '学習レビューへ進む' }))
     expect(
       screen.getByRole('heading', { name: 'Learning Review' }),
     ).toBeInTheDocument()

@@ -1,0 +1,269 @@
+.screen {
+  box-sizing: border-box;
+  width: min(980px, 100%);
+  padding: 40px;
+  text-align: left;
+}
+
+.victory {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid var(--accent-border);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, var(--accent-bg), transparent 58%),
+    var(--card-bg);
+  padding: 34px 24px;
+  text-align: center;
+  animation: victory-enter 420ms ease-out both;
+}
+
+.victory::after {
+  position: absolute;
+  right: -42px;
+  bottom: -68px;
+  width: 170px;
+  height: 170px;
+  border: 20px solid var(--accent-border);
+  border-radius: 50%;
+  content: '';
+  opacity: 0.35;
+}
+
+.eyebrow,
+.sectionLabel {
+  margin: 0;
+  color: var(--accent);
+  font: 800 0.78rem/1.4 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.victory h1 {
+  margin: 8px 0 4px;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1.05;
+}
+
+.scenario {
+  margin: 0;
+  color: var(--text);
+}
+
+.rankRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.rank {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: var(--accent-bg);
+  padding: 7px 16px;
+  font-family: var(--mono);
+}
+
+.rank span {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.rank strong {
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.record {
+  margin: 0;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 7px 12px;
+  color: var(--accent);
+  font: 800 0.78rem/1 var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.reward,
+.learning {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--social-bg);
+  padding: 22px;
+}
+
+.reward {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reward h2,
+.reward p,
+.learning h2,
+.learning h3 {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.levelUp {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 4px;
+  border: 1px solid var(--accent-border);
+  border-radius: 10px;
+  background: var(--accent-bg);
+  padding: 14px 18px;
+  color: var(--text-h);
+  text-align: center;
+}
+
+.levelUp span {
+  color: var(--accent);
+  font: 800 0.75rem/1.4 var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.performance {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+}
+
+.performance div {
+  padding: 18px;
+  text-align: center;
+}
+
+.performance div + div {
+  border-left: 1px solid var(--border);
+}
+
+.performance dt {
+  color: var(--text);
+  font: 700 0.72rem/1.4 var(--mono);
+  text-transform: uppercase;
+}
+
+.performance dd {
+  margin: 5px 0 0;
+  color: var(--text-h);
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.learningGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.learningGrid ul {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 0;
+  padding-left: 22px;
+}
+
+.commands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.commands code {
+  border: 1px solid var(--accent-border);
+  border-radius: 6px;
+  background: var(--accent-bg);
+  padding: 6px 9px;
+}
+
+.reviewLink {
+  align-self: center;
+  border-radius: 8px;
+  background: var(--accent);
+  padding: 13px 24px;
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.reviewLink:focus-visible {
+  outline: 3px solid var(--text-h);
+  outline-offset: 3px;
+}
+
+@keyframes victory-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .screen {
+    padding: 24px 16px;
+  }
+
+  .victory {
+    padding: 28px 16px;
+  }
+
+  .reward,
+  .learningGrid {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .reward {
+    flex-direction: column;
+  }
+
+  .levelUp {
+    width: 100%;
+  }
+}
+
+@media (max-width: 460px) {
+  .performance {
+    grid-template-columns: 1fr;
+  }
+
+  .performance div + div {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .reviewLink {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .victory {
+    animation: none;
+  }
+}

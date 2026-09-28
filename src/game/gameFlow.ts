@@ -37,6 +37,9 @@ export interface ScenarioProgressResult {
   readonly player: PlayerState
   readonly expAwarded: number
   readonly isNewBestRank: boolean
+  readonly isFirstClear: boolean
+  readonly previousLevel: number
+  readonly currentLevel: number
 }
 
 export function recordScenarioProgress(
@@ -52,7 +55,14 @@ export function recordScenarioProgress(
     (currentBestRank === undefined || isStageRankBetter(rank, currentBestRank))
 
   if (!isFirstClear && !isNewBestRank) {
-    return Object.freeze({ player, expAwarded: 0, isNewBestRank: false })
+    return Object.freeze({
+      player,
+      expAwarded: 0,
+      isNewBestRank: false,
+      isFirstClear: false,
+      previousLevel: player.level,
+      currentLevel: player.level,
+    })
   }
 
   const progression = isFirstClear ? addExperience(player, reward.exp) : player
@@ -72,6 +82,9 @@ export function recordScenarioProgress(
     player: nextPlayer,
     expAwarded: isFirstClear ? reward.exp : 0,
     isNewBestRank,
+    isFirstClear,
+    previousLevel: player.level,
+    currentLevel: nextPlayer.level,
   })
 }
 
