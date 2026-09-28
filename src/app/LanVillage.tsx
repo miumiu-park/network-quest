@@ -9,6 +9,7 @@ import {
 import { createInitialGameState, type PlayerState } from '../game'
 import styles from './LanVillage.module.css'
 import { PlayerStatus } from './PlayerStatus'
+import { APP_ROUTES } from './routes'
 
 interface LanVillageProps {
   readonly player?: PlayerState
@@ -90,6 +91,10 @@ export function LanVillage({ player = INITIAL_PLAYER }: LanVillageProps) {
       </header>
 
       <PlayerStatus player={player} scenarioCount={SCENARIO_GUIDES.length} />
+
+      <nav className={styles.hubLinks} aria-label="Village facilities">
+        <Link to={APP_ROUTES.codex}>Network / Monster図鑑を見る</Link>
+      </nav>
 
       <section className={styles.onboarding} aria-labelledby="quest-loop-title">
         <div>

@@ -121,4 +121,25 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   await expect(page.getByRole('button', { name: /DNS Slime/ })).toContainText(
     'クリア済み',
   )
+
+  await page.getByRole('link', { name: 'Network / Monster図鑑を見る' }).click()
+  await expect(page).toHaveURL(/\/codex$/)
+  await expect(
+    page.getByRole('heading', { name: 'Network / Monster図鑑' }),
+  ).toBeVisible()
+  await expect(page.getByLabel('図鑑登録数')).toContainText('1 / 4 登録')
+  const dnsEntry = page.getByRole('listitem', { name: 'DNS Slime 登録済み' })
+  await expect(dnsEntry).toContainText('Name Resolution')
+  await expect(dnsEntry).toContainText('BEST RANKA')
+  await expect(
+    page.getByRole('listitem', { name: '未登録Monster 1' }),
+  ).toContainText('???')
+
+  await page.reload()
+  await expect(page.getByLabel('図鑑登録数')).toContainText('1 / 4 登録')
+  await expect(
+    page.getByRole('listitem', { name: 'DNS Slime 登録済み' }),
+  ).toContainText('BEST RANKA')
+  await page.getByRole('link', { name: 'LAN Villageへ戻る' }).click()
+  await expect(page).toHaveURL(/\/village$/)
 })

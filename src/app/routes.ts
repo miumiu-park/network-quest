@@ -5,4 +5,5 @@ export const APP_ROUTES = {
   battle: '/battle/:scenarioId',
   result: '/result',
   learning: '/learning',
+  codex: '/codex',
 } as const

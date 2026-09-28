@@ -25,6 +25,7 @@ import type { StageClearResult as StageClearResultModel } from './stageClearResu
 import { LanVillage } from './LanVillage'
 import { LearningReview } from './LearningReview'
 import { NpcEvent } from './NpcEvent'
+import { MonsterCodex } from './MonsterCodex'
 import { APP_ROUTES } from './routes'
 import { usePlayerProgress } from './usePlayerProgress'
 
@@ -210,6 +211,10 @@ export function AppRoutes() {
       <Route
         path={APP_ROUTES.village}
         element={<LanVillage player={player} />}
+      />
+      <Route
+        path={APP_ROUTES.codex}
+        element={<MonsterCodex player={player} />}
       />
       <Route path={APP_ROUTES.event} element={<EventRoute />} />
       <Route path={APP_ROUTES.battle} element={<BattleRoute />} />
