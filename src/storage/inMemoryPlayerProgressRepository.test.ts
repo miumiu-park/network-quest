@@ -10,6 +10,7 @@ function createPlayer(exp = 100): PlayerState {
     completedScenarios: ['dns-slime'],
     unlockedCommands: ['ping', 'nslookup'],
     bestRanks: { 'dns-slime': 'A' },
+    unlockedAchievements: ['first-troubleshooter'],
   }
 }
 
@@ -43,12 +44,14 @@ describe('in-memory PlayerProgressRepository', () => {
       completedScenarios: ['dns-slime'],
       unlockedCommands: ['ping', 'nslookup'],
       bestRanks: { 'dns-slime': 'A' },
+      unlockedAchievements: ['first-troubleshooter'],
     })
   })
 
   it('stores snapshots independently from caller-owned arrays', () => {
     const completedScenarios = ['dns-slime']
     const unlockedCommands = ['ping']
+    const unlockedAchievements = ['first-troubleshooter'] as const
     const bestRanks: PlayerState['bestRanks'] = { 'dns-slime': 'A' }
     const repository = createInMemoryPlayerProgressRepository()
 
@@ -57,6 +60,7 @@ describe('in-memory PlayerProgressRepository', () => {
       completedScenarios,
       unlockedCommands,
       bestRanks,
+      unlockedAchievements,
     })
     completedScenarios.push('gateway-golem')
     unlockedCommands.push('nslookup')
@@ -65,10 +69,12 @@ describe('in-memory PlayerProgressRepository', () => {
     expect(restored?.completedScenarios).toEqual(['dns-slime'])
     expect(restored?.unlockedCommands).toEqual(['ping'])
     expect(restored?.bestRanks).toEqual({ 'dns-slime': 'A' })
+    expect(restored?.unlockedAchievements).toEqual(['first-troubleshooter'])
     expect(Object.isFrozen(restored)).toBe(true)
     expect(Object.isFrozen(restored?.completedScenarios)).toBe(true)
     expect(Object.isFrozen(restored?.unlockedCommands)).toBe(true)
     expect(Object.isFrozen(restored?.bestRanks)).toBe(true)
+    expect(Object.isFrozen(restored?.unlockedAchievements)).toBe(true)
   })
 
   it('keeps separate repositories isolated', () => {

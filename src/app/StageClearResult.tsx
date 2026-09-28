@@ -68,6 +68,28 @@ export function StageClearResult({
         </div>
       </dl>
 
+      {result.newAchievements.length > 0 && (
+        <section
+          className={styles.achievements}
+          aria-labelledby="achievement-unlocked-title"
+          role="status"
+        >
+          <p className={styles.sectionLabel}>Badge acquired</p>
+          <h2 id="achievement-unlocked-title">Achievement Unlocked!</h2>
+          <ul>
+            {result.newAchievements.map((achievement) => (
+              <li key={achievement.id}>
+                <span aria-hidden="true">🏅</span>
+                <div>
+                  <strong>{achievement.name}</strong>
+                  <p>{achievement.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className={styles.learning} aria-labelledby="learned-title">
         <p className={styles.sectionLabel}>Knowledge acquired</p>
         <h2 id="learned-title">今回学んだテーマ: {result.learningTheme}</h2>

@@ -11,6 +11,7 @@ describe('PlayerStatus', () => {
       completedScenarios: ['ip-slime'],
       unlockedCommands: [],
       bestRanks: { 'ip-slime': 'A' },
+      unlockedAchievements: [],
     }
 
     render(<PlayerStatus player={player} scenarioCount={4} />)

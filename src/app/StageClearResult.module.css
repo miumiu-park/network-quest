@@ -93,13 +93,51 @@
 }
 
 .reward,
-.learning {
+.learning,
+.achievements {
   box-sizing: border-box;
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 14px;
   background: var(--social-bg);
   padding: 22px;
+}
+
+.achievements {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+}
+
+.achievements h2 {
+  margin: 5px 0 14px;
+}
+
+.achievements ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.achievements li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border: 1px solid var(--accent-border);
+  border-radius: 9px;
+  background: var(--card-bg);
+  padding: 12px;
+}
+
+.achievements li > span {
+  font-size: 1.4rem;
+}
+
+.achievements p {
+  margin: 3px 0 0;
+  font-size: 0.85rem;
 }
 
 .reward {
@@ -233,6 +271,10 @@
   .reward,
   .learningGrid {
     align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .achievements ul {
     grid-template-columns: 1fr;
   }
 

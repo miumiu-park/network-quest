@@ -1,4 +1,4 @@
-import type { PlayerState } from '../game'
+import { ACHIEVEMENT_IDS, type PlayerState } from '../game'
 import { createProgressionState, STAGE_RANKS } from '../progression'
 import type { PlayerProgressRepository } from './playerProgressRepository'
 
@@ -35,13 +35,20 @@ function createPlayerSnapshot(player: PlayerState): PlayerState | null {
     const completedScenarios = normalizeUniqueStrings(player.completedScenarios)
     const unlockedCommands = normalizeUniqueStrings(player.unlockedCommands)
     const bestRanks = normalizeBestRanks(player.bestRanks)
+    const unlockedAchievements = normalizeUniqueStrings(
+      player.unlockedAchievements,
+    )
     if (
       completedScenarios === null ||
       completedScenarios.some(
         (scenarioId) => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(scenarioId),
       ) ||
       unlockedCommands === null ||
-      bestRanks === null
+      bestRanks === null ||
+      unlockedAchievements === null ||
+      unlockedAchievements.some(
+        (id) => !ACHIEVEMENT_IDS.some((achievementId) => achievementId === id),
+      )
     ) {
       return null
     }
@@ -51,6 +58,9 @@ function createPlayerSnapshot(player: PlayerState): PlayerState | null {
       completedScenarios: Object.freeze(completedScenarios),
       unlockedCommands: Object.freeze(unlockedCommands),
       bestRanks: Object.freeze(bestRanks),
+      unlockedAchievements: Object.freeze(
+        unlockedAchievements as PlayerState['unlockedAchievements'],
+      ),
     })
   } catch {
     return null
