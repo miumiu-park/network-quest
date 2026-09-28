@@ -74,7 +74,7 @@ describe('createPingCommandHandler', () => {
 
       expect(handler(args)).toEqual({
         kind: 'error',
-        text: 'usage: ping <target>',
+        text: 'usage: ping <target>\nRun "help ping" for details.',
       })
       expect(simulator.simulatePing).not.toHaveBeenCalled()
     },

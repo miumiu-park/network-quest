@@ -1,5 +1,7 @@
 export { Terminal } from './Terminal'
 export { createCommandExecutor } from './commandExecutor'
+export { COMMAND_METADATA, getCommandMetadata } from './commandMetadata'
+export type { CommandMetadata } from './commandMetadata'
 export { parseCommand } from './commandParser'
 export { createIpCommandHandler } from './ipCommand'
 export { createInvestigatedExecutor } from './investigatedExecutor'

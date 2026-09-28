@@ -1,4 +1,10 @@
-import { useId, useState, type FormEvent } from 'react'
+import {
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from 'react'
 import { parseCommand } from './commandParser'
 import styles from './Terminal.module.css'
 import type { TerminalExecutor, TerminalResult } from './terminalTypes'
@@ -15,8 +21,12 @@ export interface TerminalProps {
 
 export function Terminal({ execute }: TerminalProps) {
   const inputId = useId()
+  const instructionsId = useId()
   const [command, setCommand] = useState('')
   const [entries, setEntries] = useState<readonly TerminalEntry[]>([])
+  const [commandHistory, setCommandHistory] = useState<readonly string[]>([])
+  const [historyIndex, setHistoryIndex] = useState<number | null>(null)
+  const draftCommand = useRef('')
   const [validationError, setValidationError] = useState<string | null>(null)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -24,7 +34,9 @@ export function Terminal({ execute }: TerminalProps) {
 
     const parseResult = parseCommand(command)
     if (!parseResult.ok) {
-      setValidationError(parseResult.error.message)
+      setValidationError(
+        `${parseResult.error.message} 利用可能なcommandは「help」で確認できます。`,
+      )
       return
     }
 
@@ -38,7 +50,41 @@ export function Terminal({ execute }: TerminalProps) {
       ...currentEntries,
       { id: currentEntries.length + 1, command: normalizedCommand, result },
     ])
+    setCommandHistory((currentHistory) => [
+      ...currentHistory,
+      normalizedCommand,
+    ])
     setCommand('')
+    setHistoryIndex(null)
+    draftCommand.current = ''
+  }
+
+  function handleHistoryNavigation(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return
+    if (commandHistory.length === 0) return
+
+    event.preventDefault()
+    if (event.key === 'ArrowUp') {
+      if (historyIndex === null) draftCommand.current = command
+      const nextIndex =
+        historyIndex === null
+          ? commandHistory.length - 1
+          : Math.max(0, historyIndex - 1)
+      setHistoryIndex(nextIndex)
+      setCommand(commandHistory[nextIndex])
+      return
+    }
+
+    if (historyIndex === null) return
+    if (historyIndex < commandHistory.length - 1) {
+      const nextIndex = historyIndex + 1
+      setHistoryIndex(nextIndex)
+      setCommand(commandHistory[nextIndex])
+      return
+    }
+
+    setHistoryIndex(null)
+    setCommand(draftCommand.current)
   }
 
   return (
@@ -74,6 +120,9 @@ export function Terminal({ execute }: TerminalProps) {
         )}
       </div>
 
+      <p className={styles.keyboardHint} id={instructionsId}>
+        「help」で使い方を表示 / ↑・↓でcommand履歴を移動
+      </p>
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.label} htmlFor={inputId}>
           <span aria-hidden="true">$</span>
@@ -83,7 +132,12 @@ export function Terminal({ execute }: TerminalProps) {
           id={inputId}
           className={styles.input}
           value={command}
-          onChange={(event) => setCommand(event.target.value)}
+          onChange={(event) => {
+            setCommand(event.target.value)
+            setHistoryIndex(null)
+          }}
+          onKeyDown={handleHistoryNavigation}
+          aria-describedby={instructionsId}
           autoComplete="off"
           spellCheck="false"
           placeholder="例: ping gateway"

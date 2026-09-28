@@ -75,4 +75,45 @@ describe('Terminal', () => {
     )
     expect(execute).not.toHaveBeenCalled()
   })
+
+  it('navigates command history and restores the in-progress draft', async () => {
+    const user = userEvent.setup()
+    const execute = vi.fn<TerminalExecutor>(() => ({
+      kind: 'output',
+      text: 'ok',
+    }))
+    render(<Terminal execute={execute} />)
+    const input = screen.getByRole('textbox', { name: 'コマンド' })
+
+    await user.type(input, 'ip{enter}')
+    await user.type(input, 'ping gateway{enter}')
+    await user.type(input, 'draft')
+    await user.keyboard('{ArrowUp}')
+    expect(input).toHaveValue('ping gateway')
+    await user.keyboard('{ArrowUp}')
+    expect(input).toHaveValue('ip')
+    await user.keyboard('{ArrowUp}')
+    expect(input).toHaveValue('ip')
+    await user.keyboard('{ArrowDown}')
+    expect(input).toHaveValue('ping gateway')
+    await user.keyboard('{ArrowDown}')
+    expect(input).toHaveValue('draft')
+  })
+
+  it('lets help flow through the parser and executor', async () => {
+    const user = userEvent.setup()
+    const execute = vi.fn<TerminalExecutor>(() => ({
+      kind: 'output',
+      text: 'Available commands: help ip ping nslookup',
+    }))
+    render(<Terminal execute={execute} />)
+
+    await user.type(
+      screen.getByRole('textbox', { name: 'コマンド' }),
+      'help ping{enter}',
+    )
+
+    expect(execute).toHaveBeenCalledWith({ command: 'help', args: ['ping'] })
+    expect(screen.getByText(/Available commands/)).toBeInTheDocument()
+  })
 })

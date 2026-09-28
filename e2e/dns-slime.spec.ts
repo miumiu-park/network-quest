@@ -33,6 +33,22 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
       .filter({ hasText: '調査' }),
   ).toHaveAttribute('aria-current', 'step')
 
+  await runCommand(page, 'help')
+  await expect(page.getByText(/Available commands:/)).toBeVisible()
+  await runCommand(page, 'help ping')
+  await expect(page.getByText(/Usage: ping <target>/)).toBeVisible()
+  const terminalInput = page.getByRole('textbox', { name: 'コマンド' })
+  await terminalInput.press('ArrowUp')
+  await expect(terminalInput).toHaveValue('help ping')
+  await terminalInput.press('ArrowUp')
+  await expect(terminalInput).toHaveValue('help')
+  await terminalInput.press('ArrowDown')
+  await expect(terminalInput).toHaveValue('help ping')
+  await runCommand(page, 'pign gateway')
+  await expect(page.getByText(/command not found: pign/)).toContainText(
+    'Run "help" to list available commands.',
+  )
+
   await page.getByRole('button', { name: '次のヒントを表示' }).click()
   await expect(
     page.getByText('まずGatewayへのIP通信が成功するか確認しましょう。'),
@@ -72,7 +88,7 @@ test('VillageからDNS Slimeを解決してLearning Reviewを確認できる', a
   await expect(page.getByText('Rank: A')).toBeVisible()
   await expect(page.getByText('NEW RECORD')).toBeVisible()
   await expect(page.getByLabel('Stage performance')).toContainText(
-    'Commands3Wrong Answers0Hints1',
+    'Commands6Wrong Answers0Hints1',
   )
 
   await page.getByRole('link', { name: '学習レビューへ' }).click()
